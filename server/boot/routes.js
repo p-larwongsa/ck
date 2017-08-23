@@ -5,6 +5,10 @@ module.exports = function(app) {
   var projects =  app.models.Project;
   var request = require('request');
 
+  const CLIENT_ID = "70114818671-0eh6dgjq1fbl1s4j26a3unhukpvi7ars.apps.googleusercontent.com";
+  const CLIENT_SECRET = "RX-GqHqsEWRMk1fmLnv-h7iT";
+  const REDIRECT_URL = "http://localhost:3000/auth/google/callback";
+
  app.get('/', function(req, res) {
     console.log(req.cookies);
     var user = {};
@@ -399,8 +403,6 @@ app.post('/cksave',function(req, res) {
  //var desObj = JSON.parse(data);
 console.log(req.body);
 var data = req.body.description;
-var des = JSON.stringify(data)
-console.log(des);
 
 //var date = moment().format();
     var theReport = {

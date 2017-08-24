@@ -48,5 +48,17 @@
     "public": true,
     "$promise": {},
     "$resolved": true
+  },
+  "Form1": {
+    "dataSource": "db",
+    "public": true
+  },
+  "rid_agency": {
+    "dataSource": "db",
+    "public": true
+  },
+  "rid_office": {
+    "dataSource": "db",
+    "public": true
   }
 }

@@ -3,6 +3,9 @@ module.exports = function(app) {
   var users = app.models.user;
   var reports =  app.models.Report;
   var projects =  app.models.Project;
+  var form1 = app.models.Form1;
+  var ridOffice = app.models.rid_office;
+  var ridAgency = app.models.rid_agency;
   var request = require('request');
 
   const CLIENT_ID = "70114818671-0eh6dgjq1fbl1s4j26a3unhukpvi7ars.apps.googleusercontent.com";
@@ -232,6 +235,37 @@ app.get('/auth/google/callback', function(req, res, next) {
     } // else
   }); //get logout
 
+/* ------------- Form ----------------- */
+
+app.get('/formPage',function(req, res, next) {
+  /*console.log(req.cookies);
+  console.log('cookies_accTK : '+req.cookies['access_token']);
+  console.log('cookies_username : '+req.cookies['username']);*/
+  var user = {};
+  user.email = req.cookies['email'];
+  user.username = req.cookies['username'];
+  res.render('pages/form.html', {user:user})
+    
+});
+
+app.get('/form1', function(req, res, next) {
+  var user = {};
+  user.email = req.cookies['email'];
+  user.username = req.cookies['username'];
+
+  ridOffice.find({order: 'office_name'},function(err,data){
+    var lists = data;
+    console.log(lists);
+
+    res.render('pages/form1.html', { user: user ,lists : lists});   
+  });
+
+
+  //res.render('pages/form1.html', {user:user})
+});
+
+/* ------------ Flowto Project ----------- */
+
 app.get('/projectPage',function(req, res, next) {
   console.log(req.cookies);
   console.log('cookies_accTK : '+req.cookies['access_token']);
@@ -327,7 +361,7 @@ app.get('/TheProject',function(req, res, next) {
   });
 });
 
-/*-------- Report ----------*/
+/*-------- Flowto Report ----------*/
 
 app.post('/addReport',function(req, res, next) {
   console.log(req.body);

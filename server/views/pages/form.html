@@ -1,0 +1,48 @@
+{%extends "layout/layout.html"%}
+{%block content%}
+
+<div class="container">
+<h3>แบบฟอร์มการรายงานความก้าวหน้าโครงการ</h3>
+<hr>
+  
+<!--//////////////////////////////////////// -->
+<div class="row fluid">
+  <div class="col-md-12">
+    <!--<div  align="right">
+      <button type="button" class="btn btn-info" id="add_button" data-toggle="modal" data-target="#addProject">สร้าง</button>
+    </div>-->
+  </br>
+  <table class="table table-striped">
+    <tr>
+
+        <th>โครงการ</th>
+        <th width="10">เพิ่ม</th>
+        <!--<th>ลบ</th>-->
+    </tr>
+
+
+
+    <tr>
+
+      <td><a href="#">โครงการสร้างการรับรู้และเสริมสร้างการเรียนรู้แก่เกษตรกร เพื่อลดความเสี่ยงจากภัยแล้ง</a></td>   
+      <td width="10"><a href="/form1" class="btn btn-success btn-xs" role="button"><span class="glyphicon glyphicon-pencil" ></span></a></td>
+      <!--<td><button class="btn btn-danger btn-xs" > <span class="glyphicon glyphicon-trash" id='delete' onClick="deleteProject({{list.id}})"></span></button></td>-->
+
+    </tr>
+    <tr>
+
+      <td><a href="#">โครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื้นที่ชลประทาน</a></td>  
+      <td width="10"><a href="#" class="btn btn-success btn-xs" role="button"><span class="glyphicon glyphicon-pencil" ></span></a></td>
+      <!--<td><button class="btn btn-danger btn-xs" > <span class="glyphicon glyphicon-trash" id='delete' onClick="deleteProject({{list.id}})"></span></button></td>-->
+
+    </tr>
+    
+
+  </table>
+  </div>
+</div> <!-- //row fluid -->
+
+</div> <!-- The first class container -->
+
+
+{%endblock%}

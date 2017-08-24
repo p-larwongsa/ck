@@ -1,0 +1,38 @@
+{
+  "name": "Form1",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "office_id": {
+      "type": "number"
+    },
+    "form_agency": {
+      "type": "string"
+    },
+    "province": {
+      "type": "string"
+    },
+    "SPK_result": {
+      "type": "number"
+    },
+    "SPK_people": {
+      "type": "number"
+    },
+    "JMC_result": {
+      "type": "number"
+    },
+    "JMC_people": {
+      "type": "number"
+    },
+    "news": {
+      "type": "number"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}

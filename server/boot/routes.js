@@ -4,8 +4,8 @@ module.exports = function(app) {
   var reports =  app.models.Report;
   var projects =  app.models.Project;
   var form1 = app.models.Form1;
-  var ridOffice = app.models.rid_office;
-  var ridAgency = app.models.rid_agency;
+  var rid_office = app.models.rid_office;
+  var rid_agency = app.models.rid_agency;
   var request = require('request');
 
   const CLIENT_ID = "70114818671-0eh6dgjq1fbl1s4j26a3unhukpvi7ars.apps.googleusercontent.com";
@@ -184,9 +184,6 @@ app.get('/auth/google/callback', function(req, res, next) {
               res.cookie('username', newUser.username);
               res.cookie('email', newUser.email);
               res.cookie('userId', accessToken.userId);
-
-              //res.cookie('access_token', accessToken.id, { signed: true });
-              //res.cookie('username', username, { signed: true });
               res.redirect('/');
               }); // login
             }else{ // not have account
@@ -203,9 +200,6 @@ app.get('/auth/google/callback', function(req, res, next) {
                 res.cookie('username', newUser.username);
                 res.cookie('email', newUser.email);
                 res.cookie('userId', accessToken.userId);
-
-                //res.cookie('access_token', accessToken.id, { signed: true });
-                //res.cookie('username', username, { signed: true });
                 res.redirect('/');
                 }); // login
               }); // create
@@ -214,8 +208,6 @@ app.get('/auth/google/callback', function(req, res, next) {
         }); // user filter
  
   }); // get /user
-
-
 
  //log a user out
   app.get('/logout', function(req, res, next) {
@@ -235,12 +227,13 @@ app.get('/auth/google/callback', function(req, res, next) {
     } // else
   }); //get logout
 
-/* ------------- Form ----------------- */
+/* ------------- Form1 ----------------- */
 
 app.get('/formPage',function(req, res, next) {
   /*console.log(req.cookies);
   console.log('cookies_accTK : '+req.cookies['access_token']);
   console.log('cookies_username : '+req.cookies['username']);*/
+  console.log(req.body.message);
   var user = {};
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
@@ -253,15 +246,84 @@ app.get('/form1', function(req, res, next) {
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
 
-  ridOffice.find({order: 'office_name'},function(err,data){
-    var lists = data;
-    console.log(lists);
-
-    res.render('pages/form1.html', { user: user ,lists : lists});   
+  rid_office.find({order: 'id ASC'},function(err,data){
+    var office_lists = data;
+    rid_agency.find({order: 'id ASC'},function(err,data){
+      var agency_lists = data
+      var select_lists = {};
+      select_lists.agency = agency_lists;
+      select_lists.office = office_lists;
+      res.render('pages/form1.html', { user: user ,select_lists : select_lists});   
+    });
   });
 
+});
 
-  //res.render('pages/form1.html', {user:user})
+app.post('/sendForm1', function(req, res, next) {
+  console.log("sendForm1 : "+req.body);
+  var date = moment().format();     
+  var theForm1 = {
+    "office_name" : req.body.InputOfficeName,
+    "agency_name" : req.body.InputAgencyName,
+    "province" : req.body.province,
+    "SPK_time" : req.body.SPK_time,
+    "SPK_person" : req.body.SPK_person,
+    "JMC_time" : req.body.JMC_time,
+    "JMC_person" : req.body.JMC_person,
+    "news" : req.body.InputNews,
+    "form1_date" : date,
+    "user_id" : req.cookies['userId']
+  };
+  form1.upsert(theForm1, function(err, callback) {
+    //console.log(callback);
+    //var message = "กรอกข้อมูลสำเร็จ";
+    res.redirect('/formPage');  
+  });
+});
+
+/* ------------- Form2 ----------------- */
+
+app.get('/form2', function(req, res, next) {
+  var user = {};
+  user.email = req.cookies['email'];
+  user.username = req.cookies['username'];
+  rid_office.find({order: 'id ASC'},function(err,data){
+    var office_lists = data;
+    rid_agency.find({order: 'id ASC'},function(err,data){
+      var agency_lists = data
+      var select_lists = {};
+      select_lists.agency = agency_lists;
+      select_lists.office = office_lists;
+      res.render('pages/form2.html', { user: user ,select_lists : select_lists});   
+    });
+  });
+});
+
+app.post('/sendForm2', function(req, res, next) {
+  console.log("sendForm2 : "+JSON.stringify(req.body));
+  /*var date = moment().format();     
+  var theForm2 = {
+    "office_name" : req.body.InputOfficeName,
+    "agency_name" : req.body.InputAgencyName,
+    "firstName" : req.body.firstName,
+    "lastName" : req.body.lastName,
+    "do" : req.body.do,
+    "dont" : req.body.dont,
+    "reason" : req.body.reason,
+    "process1" : req.body.process1,
+    "process2" : req.body.process2,
+    "process3" : req.body.process3,
+    "process4" : req.body.process4,
+    "process5" : req.body.process5,
+    "note" : req.body.note,
+    "form2_date" : date,
+    "user_id" : req.cookies['userId']
+  };
+  form2.upsert(theForm2, function(err, callback) {
+    //console.log(callback);
+    //var message = "กรอกข้อมูลสำเร็จ";
+    res.redirect('/formPage');  
+  });*/
 });
 
 /* ------------ Flowto Project ----------- */
@@ -278,7 +340,6 @@ app.get('/projectPage',function(req, res, next) {
     }else{
 
       projects.find({},function(err,data){
-        //console.log(data);
         var lists = data;
         console.log(lists);
         //console.log(lists.length);
@@ -290,12 +351,10 @@ app.get('/projectPage',function(req, res, next) {
 });
 
 app.post('/add',function(req, res, next) {
-  //console.log(req.cookies);
   console.log(req.body.name);
   console.log(req.body.action);
   console.log(req.body);
-  //console.log(req.cookies['userId']);
-  //console.log(req.cookies['access_token']);
+
   if(!req.cookies['access_token']){
     return res.sendStatus(401);
   }else{
@@ -378,7 +437,6 @@ app.post('/addReport',function(req, res, next) {
     reports.upsert(theReport, function(err, callback) {
       console.log(callback);
       res.redirect('/TheProject?id='+callback.projectId);  
-      //res.redirect('/projectPage');
     });
   }
 });  // post data to report model (/add)
@@ -411,11 +469,7 @@ app.get('/modify',function(req, res, next) {
   var id =  req.query.id;
   reports.findById(id, function(err, callback) {
     console.log(callback);
-    var data = callback;
-    /*var dataObj = {};
-    data.callback = callback;
-    data.des = JSON.parse(callback.description);*/
-   
+    var data = callback;   
     var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
@@ -433,24 +487,22 @@ app.get('/modify',function(req, res, next) {
 });
 
 app.post('/cksave',function(req, res) {
-  
- //var desObj = JSON.parse(data);
-console.log(req.body);
-var data = req.body.description;
+  console.log(req.body);
+  var data = req.body.description;
 
 //var date = moment().format();
-    var theReport = {
-      "id" : req.body.RP_id,
-      "user_id" : req.cookies['userId'],
-      "projectId" : req.body.project_id,
-      "description" : data
-    };
-    console.log(theReport);
-    reports.upsert(theReport, function(err, callback) {
-      console.log(callback);
-      res.redirect('/TheProject?id='+callback.projectId);  
-      //res.redirect('/projectPage');
-    });
+  var theReport = {
+    "id" : req.body.RP_id,
+    "user_id" : req.cookies['userId'],
+    "projectId" : req.body.project_id,
+    "description" : data
+  };
+  console.log(theReport);
+  reports.upsert(theReport, function(err, callback) {
+    console.log(callback);
+    res.redirect('/TheProject?id='+callback.projectId);  
+    //res.redirect('/projectPage');
+  });
 
 });
 
@@ -467,8 +519,6 @@ app.get('/view_report', function(req, res) {
   
     res.render('pages/view_report.html', { user : user, RBbody : RBbody});
   });
-
-  //res.render('pages/view_report.html');
 });
 
 

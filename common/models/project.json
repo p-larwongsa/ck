@@ -13,7 +13,7 @@
       "type": "number"
     },
     "project_date": {
-      "type": "string"
+      "type": "date"
     }
   },
   "validations": [],

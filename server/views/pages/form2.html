@@ -1,0 +1,180 @@
+{%extends "layout/layout.html"%}
+{%block content%}
+
+
+
+<div class="container" >
+
+  <fieldset class="form-group">
+  <h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื้นที่ชลประทาน</h3>  
+  </fieldset>
+  <hr>
+  <form action="/sendForm2" method="post">
+  <div class="form-group">
+    <label for="InputOfficeName">เลือกหน่วยงาน</label> : 
+    <select class="selectpicker" data-live-search="true" id="InputOfficeName" name="InputOfficeName">
+      <option value="">--- เลือกหน่วยงาน ---</option>
+      {% for list in select_lists.office %}
+      <option value="{{list.office_name}}" >{{list.office_name}}</option>
+      {% endfor %}
+    </select>
+
+  </div>
+  <div class="form-group">
+    <label for="InputAgencyName">โครงการชลประทาน</label> : 
+
+    <select class="selectpicker" data-live-search="true" id="InputAgencyName" name="InputAgencyName">
+      <option value="">--- เลือกโครงการ ---</option>
+      {% for list in select_lists.agency %}
+      <option value="{{list.agency_name}}" >{{list.agency_name}}</option>
+      {% endfor %}
+      </select>
+  </div>
+
+  <fieldset class="form-group">
+  <legend>รายชื่อเกษตรกร</legend>
+  <div class="form-group row">
+    <!--<div class="col-md-4">
+      <label for="farmerName">รายชื่อเกษตรกร</label>
+      <input class="form-control" id="farmerName" name="farmerName">
+    </div>-->
+    <div class="col-md-4" id="checkForm1">
+      <label for="firstName">ชื่อ</label>
+      <input type="text" class="form-control" id="firstName" name="firstName" placeholder="ชื่อ" >
+
+      <label for="lastName">นามสกุล</label>
+      <input type="text" class="form-control" id="lastName" name="lastName" placeholder="นามสกุล">
+    </div>
+
+  </div>
+
+  <!-- ความก้าวหน้า -->
+  <fieldset class="form-group">
+  <legend>ความก้าวหน้า</legend>
+  <div class="form-checkDo">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" id="Do" name="Do" value="do">
+      ดำเนินการแล้ว
+    </label>    
+  </div>
+
+  <div class="form-checkDont">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" id="Dont" name="Dont" value="dont">
+      ยังไม่ดำเนินการ
+    </label>
+    <div class="container" >
+      <div class="form-group" id="checkDont" style="display:none">
+        <label for="reason">เพราะ:</label>
+        <textarea class="form-control" rows="5" id="reason" name="reason"></textarea>
+      </div>
+    </div>
+  </div>
+  </fieldset>
+
+ <!-- % ความก้าวหน้า -->
+  <fieldset class="form-group">
+  <legend>เปอร์เซ็นความก้าวหน้าของแต่ละขั้นตอน</legend>
+    <div class="form-process1">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" id="ChkProcess1" name="ChkProcess1">
+      ขั้นตอนที่ 1
+    </label>
+    <div class="container" >
+      <div class="form-group" id="process1" style="display:none">
+        <textarea class="form-control" rows="5" id="process1" name="process1"></textarea>
+      </div>
+    </div>
+  </div> <!-- /process 1 -->
+
+  <div class="form-process2">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" id="ChkProcess2" name="ChkProcess2">
+      ขั้นตอนที่ 2
+    </label>
+    <div class="container" >
+      <div class="form-group" id="process2" style="display:none">
+        <textarea class="form-control" rows="5" id="process2" name="process2"></textarea>
+      </div>
+    </div>
+  </div> <!-- /process 2 -->
+
+  <div class="form-process3">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" id="ChkProcess3" name="ChkProcess3">
+      ขั้นตอนที่ 3
+    </label>
+    <div class="container" >
+      <div class="form-group" id="process3" style="display:none">
+        <textarea class="form-control" rows="5" id="process3" name="process3"></textarea>
+      </div>
+    </div>
+  </div> <!-- /process 3 -->
+
+  <div class="form-process4">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" id="ChkProcess4" name="ChkProcess4">
+      ขั้นตอนที่ 4
+    </label>
+    <div class="container" >
+      <div class="form-group" id="process4" style="display:none">
+        <textarea class="form-control" rows="5" id="process4" name="process4"></textarea>
+      </div>
+    </div>
+  </div> <!-- /process 4 -->
+
+  <div class="form-process5">
+    <label class="form-check-label">
+      <input type="checkbox" class="form-check-input" id="ChkProcess5" name="ChkProcess5">
+      ขั้นตอนที่ 5
+    </label>
+    <div class="container" >
+      <div class="form-group" id="process5" style="display:none">
+        <textarea class="form-control" rows="5" id="process5" name="process5"></textarea>
+      </div>
+    </div>
+  </div> <!-- /process 3 -->
+
+  </fieldset>
+
+  <!-- หมายเหตุ -->
+  <fieldset class="form-group">
+  <legend>หมายเหตุ</legend>
+ 
+    <div class="container" >
+      <div class="form-group" >
+        <label for="note">หมายเหตุ:</label>
+        <textarea class="form-control" rows="5" id="note" name="note"></textarea>
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-group">
+    <input type="submit" id="btn_upload" name="btn_upload" class="btn btn-primary"></button>
+  </div>
+  </form>
+</div> <!-- The first class container -->
+
+<!-- checkbox then show -->
+<script type="text/javascript">
+    $('#Dont').click(function() {
+    $("#checkDont").toggle(this.checked);
+    });
+
+    $('#ChkProcess1').click(function() {
+    $("#process1").toggle(this.checked);
+    });
+    $('#ChkProcess2').click(function() {
+    $("#process2").toggle(this.checked);
+    });
+    $('#ChkProcess3').click(function() {
+    $("#process3").toggle(this.checked);
+    });
+    $('#ChkProcess4').click(function() {
+    $("#process4").toggle(this.checked);
+    });
+    $('#ChkProcess5').click(function() {
+    $("#process5").toggle(this.checked);
+    });
+</script>
+
+{%endblock%}

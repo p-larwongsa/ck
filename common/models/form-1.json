@@ -6,30 +6,36 @@
     "validateUpsert": true
   },
   "properties": {
-    "office_id": {
-      "type": "number"
+    "office_name": {
+      "type": "string"
     },
-    "form_agency": {
+    "agency_name": {
       "type": "string"
     },
     "province": {
       "type": "string"
     },
-    "SPK_result": {
+    "SPK_time": {
       "type": "number"
     },
-    "SPK_people": {
+    "SPK_person": {
       "type": "number"
     },
-    "JMC_result": {
+    "JMC_time": {
       "type": "number"
     },
-    "JMC_people": {
+    "JMC_person": {
       "type": "number"
     },
     "news": {
       "type": "number"
-    }
+    },
+    "form1_date": {
+      "type": "date"
+    },
+    "user_id": {
+      "type": "number"
+    },
   },
   "validations": [],
   "relations": {},

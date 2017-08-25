@@ -4,7 +4,6 @@
 
 
 <div class="container" >
-<form action="/" method="post" enctype="multipart/form-data">
 
   <fieldset class="form-group">
   <h3 align="center">แบบฟอร์มติดตามมาตราการสร้างการรับรู้และประชาสัมพันธ์</h3>  
@@ -28,11 +27,12 @@
   <h4>รอบวันที่ :  </h4>  -->
   </fieldset>
 
+  <form action="/sendForm1" method="post">
   <div class="form-group">
-    <label for="InputOfficeID">เลือกหน่วยงาน</label> : 
-    <select class="selectpicker" id="InputOfficeID" name="InputOfficeID">
+    <label for="InputOfficeName">เลือกหน่วยงาน</label> : 
+    <select class="selectpicker" data-live-search="true" id="InputOfficeName" name="InputOfficeName">
       <option value="">--- เลือกหน่วยงาน ---</option>
-      {% for list in lists %}
+      {% for list in select_lists.office %}
       <option value="{{list.office_name}}" >{{list.office_name}}</option>
       {% endfor %}
     </select>
@@ -41,9 +41,11 @@
   <div class="form-group">
     <label for="InputAgencyName">โครงการชลประทาน</label> : 
 
-    <select class="selectpicker" id="InputAgencyName" name="InputAgencyName">
+    <select class="selectpicker" data-live-search="true" id="InputAgencyName" name="InputAgencyName">
       <option value="">--- เลือกโครงการ ---</option>
-      <option value="{{agebcy}}" >ชื่อโครงการ</option>
+      {% for list in select_lists.agency %}
+      <option value="{{list.agency_name}}" >{{list.agency_name}}</option>
+      {% endfor %}
       </select>
   </div>
 
@@ -131,7 +133,7 @@
       <option value="อ่างทอง">อ่างทอง </option>
     </select>
   </div>
-
+ 
   <fieldset class="form-group">
   <legend>ผลการดำเนินการ</legend>
   <!--ศ.พ.ก. checkbox -->
@@ -143,10 +145,10 @@
     <div class="container" >
     <div class="col-md-3" id="checkForm1" style="display:none">
       <label for="InputAgencyName">ครั้ง</label>
-      <input type="text" class="form-control" id="time1" name="time1">
+      <input type="text" class="form-control" id="SPK_time" name="SPK_time">
 
       <label for="InputAgencyName">เกษตรกร(คน)</label>
-      <input type="text" class="form-control" id="person1" name="person1">
+      <input type="text" class="form-control" id="SPK_person" name="SPK_person">
     </div>
     </div>
   </div>
@@ -160,10 +162,10 @@
     <div class="container" >
     <div class="col-md-3" id="checkForm2" style="display:none">
       <label for="InputAgencyName">ครั้ง</label>
-      <input type="text" class="form-control" id="time2" name="time2">
+      <input type="text" class="form-control" id="JMC_time" name="JMC_time">
 
       <label for="InputAgencyName">เกษตรกร(คน)</label>
-      <input type="text" class="form-control" id="person2" name="person2">
+      <input type="text" class="form-control" id="JMC_person" name="JMC_person">
     </div>
     </div>
   </div>
@@ -176,7 +178,7 @@
 
 
   <div class="form-group">
-    <button type="submit" id="btn_upload" name="btn_upload" class="btn btn-primary" >ส่ง</button>
+    <input type="submit" id="btn_upload" name="btn_upload" class="btn btn-primary" value="ส่ง"></button>
   </div>
 </form>
 </div> <!-- The first class container -->

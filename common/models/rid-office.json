@@ -6,7 +6,7 @@
     "validateUpsert": true
   },
   "properties": {
-     "office_name": {
+    "office_name": {
       "type": "string"
     }
   },

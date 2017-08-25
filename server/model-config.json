@@ -60,5 +60,9 @@
   "rid_office": {
     "dataSource": "db",
     "public": true
+  },
+  "Form2": {
+    "dataSource": "db",
+    "public": true
   }
 }

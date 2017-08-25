@@ -4,6 +4,7 @@ module.exports = function(app) {
   var reports =  app.models.Report;
   var projects =  app.models.Project;
   var form1 = app.models.Form1;
+  var form2 = app.models.Form2;
   var rid_office = app.models.rid_office;
   var rid_agency = app.models.rid_agency;
   var request = require('request');
@@ -230,10 +231,6 @@ app.get('/auth/google/callback', function(req, res, next) {
 /* ------------- Form1 ----------------- */
 
 app.get('/formPage',function(req, res, next) {
-  /*console.log(req.cookies);
-  console.log('cookies_accTK : '+req.cookies['access_token']);
-  console.log('cookies_username : '+req.cookies['username']);*/
-  console.log(req.body.message);
   var user = {};
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
@@ -301,14 +298,14 @@ app.get('/form2', function(req, res, next) {
 
 app.post('/sendForm2', function(req, res, next) {
   console.log("sendForm2 : "+JSON.stringify(req.body));
-  /*var date = moment().format();     
+  var date = moment().format();     
   var theForm2 = {
     "office_name" : req.body.InputOfficeName,
     "agency_name" : req.body.InputAgencyName,
     "firstName" : req.body.firstName,
     "lastName" : req.body.lastName,
-    "do" : req.body.do,
-    "dont" : req.body.dont,
+    "do" : req.body.Do,
+    "dont" : req.body.Dont,
     "reason" : req.body.reason,
     "process1" : req.body.process1,
     "process2" : req.body.process2,
@@ -323,7 +320,7 @@ app.post('/sendForm2', function(req, res, next) {
     //console.log(callback);
     //var message = "กรอกข้อมูลสำเร็จ";
     res.redirect('/formPage');  
-  });*/
+  });
 });
 
 /* ------------ Flowto Project ----------- */

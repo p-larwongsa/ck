@@ -12,22 +12,16 @@
   </br>
   <table class="table table-striped">
     <tr>
-
         <th>หัวข้อ</th>
         <th>แก้ไข</th>
         <th>ลบ</th>
     </tr>
-
     {% for list in RPobj.data %}
-
     <tr>
-  
       <td><a href="/view_report?id={{list.id}}">{{list.title}}</a></td>  
       <td width="10"><a href="/modify?id={{list.id}}" class="btn btn-success btn-xs" role="button"><span class="glyphicon glyphicon-pencil" ></span></a></td>
       <td><button class="btn btn-danger btn-xs" > <span class="glyphicon glyphicon-trash" id='delete' onClick="delReport({{list.id}})"></span></button></td>
-
     </tr>
-    
     {% endfor %}
   </table>
   </div>

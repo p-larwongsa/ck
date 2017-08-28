@@ -1,4 +1,6 @@
 module.exports = function(app) {
+  var multer  = require('multer');
+  var upload = multer({ dest: 'uploads/'});
   var moment = require('moment');
   var users = app.models.user;
   var reports =  app.models.Report;
@@ -7,6 +9,7 @@ module.exports = function(app) {
   var form2 = app.models.Form2;
   var rid_office = app.models.rid_office;
   var rid_agency = app.models.rid_agency;
+  var uploads = app.models.Uploads;
   var request = require('request');
 
   const CLIENT_ID = "70114818671-0eh6dgjq1fbl1s4j26a3unhukpvi7ars.apps.googleusercontent.com";
@@ -228,7 +231,7 @@ app.get('/auth/google/callback', function(req, res, next) {
     } // else
   }); //get logout
 
-/* ------------- Form1 ----------------- */
+/* ------------- Form ----------------- */
 
 app.get('/formPage',function(req, res, next) {
   var user = {};
@@ -238,89 +241,98 @@ app.get('/formPage',function(req, res, next) {
     
 });
 
-app.get('/form1', function(req, res, next) {
+app.get('/form',function(req, res, next) {
+  console.log(req.query);
   var user = {};
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
-
+ 
   rid_office.find({order: 'id ASC'},function(err,data){
     var office_lists = data;
     rid_agency.find({order: 'id ASC'},function(err,data){
-      var agency_lists = data
+      var agency_lists = data 
       var select_lists = {};
       select_lists.agency = agency_lists;
       select_lists.office = office_lists;
-      res.render('pages/form1.html', { user: user ,select_lists : select_lists});   
-    });
-  });
+      //console.log(select_lists);
 
-});
+    if(req.query.form == 'form1'){
+      console.log('Form1'); 
+      res.render('pages/form1.html', { user: user ,select_lists : select_lists});
 
-app.post('/sendForm1', function(req, res, next) {
-  console.log("sendForm1 : "+req.body);
-  var date = moment().format();     
-  var theForm1 = {
-    "office_name" : req.body.InputOfficeName,
-    "agency_name" : req.body.InputAgencyName,
-    "province" : req.body.province,
-    "SPK_time" : req.body.SPK_time,
-    "SPK_person" : req.body.SPK_person,
-    "JMC_time" : req.body.JMC_time,
-    "JMC_person" : req.body.JMC_person,
-    "news" : req.body.InputNews,
-    "form1_date" : date,
-    "user_id" : req.cookies['userId']
-  };
-  form1.upsert(theForm1, function(err, callback) {
-    //console.log(callback);
-    //var message = "กรอกข้อมูลสำเร็จ";
-    res.redirect('/formPage');  
-  });
-});
-
-/* ------------- Form2 ----------------- */
-
-app.get('/form2', function(req, res, next) {
-  var user = {};
-  user.email = req.cookies['email'];
-  user.username = req.cookies['username'];
-  rid_office.find({order: 'id ASC'},function(err,data){
-    var office_lists = data;
-    rid_agency.find({order: 'id ASC'},function(err,data){
-      var agency_lists = data
-      var select_lists = {};
-      select_lists.agency = agency_lists;
-      select_lists.office = office_lists;
+    }if(req.query.form == 'form2'){
+      console.log('Form2');
       res.render('pages/form2.html', { user: user ,select_lists : select_lists});   
+    }
+
     });
   });
 });
 
-app.post('/sendForm2', function(req, res, next) {
-  console.log("sendForm2 : "+JSON.stringify(req.body));
+var cpUpload = upload.fields([{ name: 'photos', maxCount: 30 }])
+
+//app.post('/sendForm', upload , function(req, res, next) {
+app.post('/sendForm', cpUpload, function(req, res, next) {
+  console.log('form : '+req.query.form);
   var date = moment().format();     
-  var theForm2 = {
-    "office_name" : req.body.InputOfficeName,
-    "agency_name" : req.body.InputAgencyName,
-    "firstName" : req.body.firstName,
-    "lastName" : req.body.lastName,
-    "do" : req.body.Do,
-    "dont" : req.body.Dont,
-    "reason" : req.body.reason,
-    "process1" : req.body.process1,
-    "process2" : req.body.process2,
-    "process3" : req.body.process3,
-    "process4" : req.body.process4,
-    "process5" : req.body.process5,
-    "note" : req.body.note,
-    "form2_date" : date,
-    "user_id" : req.cookies['userId']
-  };
-  form2.upsert(theForm2, function(err, callback) {
-    //console.log(callback);
-    //var message = "กรอกข้อมูลสำเร็จ";
-    res.redirect('/formPage');  
-  });
+  var form = req.query.form;
+  if( form == 'form1') {
+    //console.log('upload : '+ JSON.stringify(req.files));  // photos
+    console.log(req.files);
+    console.log(req.files['photos'][0].originalname);
+    console.log(req.body);
+    var theForm1 = {
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "province" : req.body.province,
+      "SPK_time" : req.body.SPK_time,
+      "SPK_person" : req.body.SPK_person,
+      "JMC_time" : req.body.JMC_time,
+      "JMC_person" : req.body.JMC_person,
+      "news" : req.body.InputNews,
+      "form1_date" : date,
+      "user_id" : req.cookies['userId']
+    };
+
+    form1.upsert(theForm1, function(err, callback) {
+      //console.log(callback);
+      var date = moment().format();               
+      console.log(date);
+      uploads.upsert({
+        "name" : req.files['photos'][0].originalname,
+        "form1_id" : callback.id
+      },function(err,callback){
+        console.log(callback);
+      });
+      //console.log(callback);
+      //var message = "กรอกข้อมูลสำเร็จ";
+      res.redirect('/formPage');  
+    });
+  }if( form == 'form2') {
+    console.log(req.body);
+    var theForm2 = {
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "firstName" : req.body.firstName,
+      "lastName" : req.body.lastName,
+      "do" : req.body.Do,
+      "dont" : req.body.Dont,
+      "reason" : req.body.reason,
+      "process1" : req.body.process1,
+      "process2" : req.body.process2,
+      "process3" : req.body.process3,
+      "process4" : req.body.process4,
+      "process5" : req.body.process5,
+      "note" : req.body.note,
+      "form2_date" : date,
+      "user_id" : req.cookies['userId']
+    };
+    form2.upsert(theForm2, function(err, callback) {
+      //console.log(callback);
+      //var message = "กรอกข้อมูลสำเร็จ";
+      res.redirect('/formPage');  
+    });
+  }
 });
 
 /* ------------ Flowto Project ----------- */
@@ -391,8 +403,8 @@ app.post('/delete',function(req, res, next) {
 });
 
 app.get('/TheProject',function(req, res, next) {
-  console.log(req.query.id);
-  var id =  req.query.id;
+  console.log(req.query.id); 
+  var id =  req.query.id; // project id
   projects.findById(id, function(err, callback) {
     console.log(callback);
     var data = callback;
@@ -406,7 +418,8 @@ app.get('/TheProject',function(req, res, next) {
     var projectId = data.id;
     var projectName = data.name
     reports.find(filter, function(err, data) {
-      //console.log(data);
+      console.log("TheProject"+JSON.stringify(data));
+      console.log(req.cookies);
       var RPobj = {};
       RPobj.meta= {projectId : projectId};
       RPobj.data = data;
@@ -518,5 +531,9 @@ app.get('/view_report', function(req, res) {
   });
 });
 
+app.post('/upload', upload.array('photos', 12), function(req, res, next) {
+  console.log('upload : '+ JSON.stringify(req.files));
+  res.send('upload : '+ JSON.stringify(req.files['originalname']));
+});
 
 }

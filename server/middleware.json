@@ -41,10 +41,16 @@
     }
   },
   "files": {
-    "loopback#static": {
-      "paths": "/css",
-      "params": "$!../css"
-    }
+    "loopback#static": [
+      {
+        "paths": "/css",
+        "params": "$!../css"
+      },
+      {
+        "paths": "/upload",
+        "params": "$!../upload"
+      }
+    ]
   },
   "final": {
     "loopback#urlNotFound": {}

@@ -64,5 +64,9 @@
   "Form2": {
     "dataSource": "db",
     "public": true
+  },
+  "Uploads": {
+    "dataSource": "db",
+    "public": true
   }
 }

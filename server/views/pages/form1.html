@@ -27,7 +27,7 @@
   <h4>รอบวันที่ :  </h4>  -->
   </fieldset>
 
-  <form action="/sendForm1" method="post">
+  <form action="/sendForm?form=form1" method="post" enctype="multipart/form-data">
   <div class="form-group">
     <label for="InputOfficeName">เลือกหน่วยงาน</label> : 
     <select class="selectpicker" data-live-search="true" id="InputOfficeName" name="InputOfficeName">
@@ -103,7 +103,7 @@
       <option value="ยะลา">ยะลา </option>
       <option value="ร้อยเอ็ด">ร้อยเอ็ด </option>
       <option value="ระนอง">ระนอง </option>
-      <option value="ระยอง">ระยอง </option>
+      <option value="ระยอง">ระยอง </option> 
       <option value="ราชบุรี">ราชบุรี</option>
       <option value="ลพบุรี">ลพบุรี </option>
       <option value="ลำปาง">ลำปาง </option>
@@ -175,7 +175,9 @@
     <label for="InputNews">ข่าวประชาสัมพันธ์อื่นๆ(ครั้ง)</label>
     <input type="text" class="form-control" id="InputNews" name="InputNews">
   </div>
-
+  <div class="form-group">
+    <input type="file" name="photos" id="photos" multiple />
+  </div>
 
   <div class="form-group">
     <input type="submit" id="btn_upload" name="btn_upload" class="btn btn-primary" value="ส่ง"></button>

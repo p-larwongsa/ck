@@ -35,6 +35,9 @@
     },
     "user_id": {
       "type": "number"
+    },
+    "date": {
+      "type": "string"
     }
   },
   "validations": [],

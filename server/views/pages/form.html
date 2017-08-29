@@ -43,16 +43,36 @@
 </div> <!-- //row fluid -->
 </div> <!-- The first class container -->
 
-<div class="container">
-  <form action="/upload" method="post" enctype="multipart/form-data">
-    <div class="form-group">
-  <input type="file" name="photos" id="photos" multiple />
-  </div>
 
-  <div class="form-group">
-    <input type="submit" id="btn_upload" name="btn_upload" class="btn btn-primary" ></button>
-  </div>
-  </form>
+<div class="container">
+
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ลำดับ</th>
+        <th>หน่วยงาน</th>
+        <th>จังหวัด</th>
+        <th><center>ศ.พ.ก.<br>ครั้ง/เกษตรกร(คน)</center></th>
+        <th><center>JMC <br>ครั้ง/เกษตรกร(คน)</center></th>
+        <th><center>ข่าวประชาสัมพันธ์อื่นๆ<br>(ครั้ง)</center></th>
+        <th><center>ภาพถ่ายการลงพื้นที่</center></th>      
+        <!--<th>Resulte</th>-->
+        <th>Update</th>
+        <th>Delete</th>
+     
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+       </center></td>
+       <!-- select agency and time -->
+      <td width="10"><center><p data-placement="top" data-toggle="tooltip" ><button class="btn btn-primary btn-xs" data-title="edit" data-toggle="modal" data-target="#edit" ><span class="glyphicon glyphicon-pencil"></span></button></p></center></td>
+      <td><center><p data-placement="top" data-toggle="tooltip" ><button class="btn btn-danger btn-xs" data-title="delete" data-toggle="modal" data-target="#delete" ><span class="glyphicon glyphicon-remove"></span></button></p></center></td>   
+      </tr>
+    </tbody>
+  </table>
+  
 </div>
+{{date}}
  
 {%endblock%}

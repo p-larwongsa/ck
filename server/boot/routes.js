@@ -1,7 +1,8 @@
 module.exports = function(app) {
-  var multer  = require('multer');
-  var upload = multer({ dest: 'uploads/'});
+  var request = require('request');
   var moment = require('moment');
+  var multer  = require('multer');
+  var upload = multer({dest : 'uploads/'+moment().format('MMMM')});
   var users = app.models.user;
   var reports =  app.models.Report;
   var projects =  app.models.Project;
@@ -10,12 +11,12 @@ module.exports = function(app) {
   var rid_office = app.models.rid_office;
   var rid_agency = app.models.rid_agency;
   var uploads = app.models.Uploads;
-  var request = require('request');
+  
 
   const CLIENT_ID = "70114818671-0eh6dgjq1fbl1s4j26a3unhukpvi7ars.apps.googleusercontent.com";
   const CLIENT_SECRET = "RX-GqHqsEWRMk1fmLnv-h7iT";
   const REDIRECT_URL = "http://localhost:3000/auth/google/callback";
-
+ 
  app.get('/', function(req, res) {
     console.log(req.cookies);
     var user = {};
@@ -237,8 +238,9 @@ app.get('/formPage',function(req, res, next) {
   var user = {};
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
-  res.render('pages/form.html', {user:user})
-    
+  console.log("formPage Time : "+moment().locale('th').format('LLLL'));
+  var date = moment().locale('th').format('DD MMMM YYYY')
+  res.render('pages/form.html', {user:user, date:date})    
 });
 
 app.get('/form',function(req, res, next) {
@@ -246,6 +248,7 @@ app.get('/form',function(req, res, next) {
   var user = {};
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
+  var date = moment().locale('th').format('DD MMMM YYYY');
  
   rid_office.find({order: 'id ASC'},function(err,data){
     var office_lists = data;
@@ -258,29 +261,34 @@ app.get('/form',function(req, res, next) {
 
     if(req.query.form == 'form1'){
       console.log('Form1'); 
-      res.render('pages/form1.html', { user: user ,select_lists : select_lists});
+      res.render('pages/form1.html', 
+        { user : user ,
+          select_lists : select_lists, 
+          date : date
+        });
 
     }if(req.query.form == 'form2'){
       console.log('Form2');
-      res.render('pages/form2.html', { user: user ,select_lists : select_lists});   
+      res.render('pages/form2.html', 
+        { user : user ,
+          select_lists : select_lists, 
+          date : date
+        });
     }
 
     });
   });
 });
 
-var cpUpload = upload.fields([{ name: 'photos', maxCount: 30 }])
-
-//app.post('/sendForm', upload , function(req, res, next) {
+var cpUpload = upload.fields([{ name: 'photos', maxCount: 20 }]);
+//var newFilename = upload.rename(fieldname, filename.replace(ext, '')) + ext;
 app.post('/sendForm', cpUpload, function(req, res, next) {
   console.log('form : '+req.query.form);
-  var date = moment().format();     
+  //var date = moment().format();  
+  var date = moment().locale('th').format('DD MMMM YYYY');  
   var form = req.query.form;
   if( form == 'form1') {
-    //console.log('upload : '+ JSON.stringify(req.files));  // photos
-    console.log(req.files);
-    console.log(req.files['photos'][0].originalname);
-    console.log(req.body);
+    //console.log(req.files['photos'][0].originalname);
     var theForm1 = {
       "office_name" : req.body.InputOfficeName,
       "agency_name" : req.body.InputAgencyName,
@@ -290,24 +298,30 @@ app.post('/sendForm', cpUpload, function(req, res, next) {
       "JMC_time" : req.body.JMC_time,
       "JMC_person" : req.body.JMC_person,
       "news" : req.body.InputNews,
-      "form1_date" : date,
+      "date" : date,
       "user_id" : req.cookies['userId']
     };
-
+//console.log(req.files['photos']);
     form1.upsert(theForm1, function(err, callback) {
       //console.log(callback);
-      var date = moment().format();               
-      console.log(date);
-      uploads.upsert({
-        "name" : req.files['photos'][0].originalname,
-        "form1_id" : callback.id
-      },function(err,callback){
-        console.log(callback);
-      });
-      //console.log(callback);
-      //var message = "กรอกข้อมูลสำเร็จ";
-      res.redirect('/formPage');  
+      /*var date = moment().format();               
+      console.log(date);*/
+      var id = callback.id;
+      console.log(id);
+
+      for(var i = 0; i < req.files['photos'].length;i++){
+        var pack = {
+            name : req.files['photos'][i].originalname,
+            path : req.files['photos'][i].path,
+            form1_id : id
+        }
+        uploads.upsert(pack,function(err,callback){
+          console.log(callback);
+        });
+      }
+     res.redirect('/formPage'); 
     });
+
   }if( form == 'form2') {
     console.log(req.body);
     var theForm2 = {
@@ -529,11 +543,6 @@ app.get('/view_report', function(req, res) {
   
     res.render('pages/view_report.html', { user : user, RBbody : RBbody});
   });
-});
-
-app.post('/upload', upload.array('photos', 12), function(req, res, next) {
-  console.log('upload : '+ JSON.stringify(req.files));
-  res.send('upload : '+ JSON.stringify(req.files['originalname']));
 });
 
 }

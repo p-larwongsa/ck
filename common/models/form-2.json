@@ -12,6 +12,9 @@
     "agency_name": {
       "type": "string"
     },
+    "introName": {
+      "type": "string"
+    },
     "firstName": {
       "type": "string"
     },

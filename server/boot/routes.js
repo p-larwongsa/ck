@@ -280,16 +280,21 @@ app.get('/form',function(req, res, next) {
   });
 });
 
-var cpUpload = upload.fields([{ name: 'photos', maxCount: 20 }]);
+//var cpUpload = upload.fields([{ name: 'photos', maxCount: 20 }]);
 //var newFilename = upload.rename(fieldname, filename.replace(ext, '')) + ext;
-app.post('/sendForm', cpUpload, function(req, res, next) {
+app.post('/sendForm', upload.any(), function(req, res, next) {
   console.log('form : '+req.query.form);
-  var date = moment().format('DD MMMM YYYY, h:mm:ss a');  
+  var date = moment().local('th').format('DD MMMM YYYY, h:mm:ss a');  
   //var date = moment().locale('th').format('DD MMMM YYYY');  
   var form = req.query.form;
   if( form == 'form1') {
-    //console.log(req.files['photos'][0].originalname);
-    var theForm1 = {
+    console.log(req.files.length);
+    //console.log(req.files[0].originalname);
+//console.log(req.files['photos']);
+    if(req.files.length == 0){
+      console.log("photo 0 : "+req.files.length);
+      console.log('no photo');
+      var theForm1 = {
       "office_name" : req.body.InputOfficeName,
       "agency_name" : req.body.InputAgencyName,
       "province" : req.body.province,
@@ -301,37 +306,58 @@ app.post('/sendForm', cpUpload, function(req, res, next) {
       "date" : date,
       "user_id" : req.cookies['userId']
     };
-//console.log(req.files['photos']);
-    form1.upsert(theForm1, function(err, callback) {
-      //console.log(callback);
-      /*var date = moment().format();               
-      console.log(date);*/
+      form1.upsert(theForm1, function(err, callback) {
+      //var date = moment().format();               
+      res.redirect('/formPage');
+    });
+
+    }if(req.files.length > 0){
+      console.log("photo > 0 : "+req.files.length);
+      console.log(req.files[0].originalname);
+      var theForm1 = {
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "province" : req.body.province,
+      "SPK_time" : req.body.SPK_time,
+      "SPK_person" : req.body.SPK_person,
+      "JMC_time" : req.body.JMC_time,
+      "JMC_person" : req.body.JMC_person,
+      "news" : req.body.InputNews,
+      "date" : date,
+      "user_id" : req.cookies['userId']
+    };
+   // console.log("00000"+req.files[0]);
+    //console.log("11111"+req.files[1].originalname);
+      form1.upsert(theForm1, function(err, callback) {
+      //var date = moment().format();               
       var id = callback.id;
       console.log(id);
-      console.log(req.files['photos'].length);
-    if(req.files['photos'].length > 0){
-      for(var i = 0; i < req.files['photos'].length;i++){
+      var form1_id = id;
+      for(var i = 0; i < req.files.length;i++){
+        console.log(i);
+        console.log(form1_id);
         var pack = {
-            name : req.files['photos'][i].originalname,
-            path : req.files['photos'][i].path,
+            name : req.files[i].originalname,
+            path : req.files[i].path,
             form1_id : id
         }
+        console.log(pack);
         uploads.upsert(pack,function(err,callback){
           console.log(callback);
         });
-      }
-      res.redirect('/formPage'); 
-    }else{
-      res.redirect('/formPage');  
+      
     }
+    res.redirect('/formPage');
+    //console.log(pack);
     });
-    
+  }
 
   }if( form == 'form2') {
     console.log(req.body);
     var theForm2 = {
       "office_name" : req.body.InputOfficeName,
       "agency_name" : req.body.InputAgencyName,
+      "introName" : req.body.introName,
       "firstName" : req.body.firstName,
       "lastName" : req.body.lastName,
       "do" : req.body.Do,
@@ -369,6 +395,11 @@ app.get('/view_form',function(req, res, next) {
 
   }if(view == 'form2'){
     console.log('form2');
+    form2.find({},function(err,data){
+      var lists = data;
+      console.log(lists.firstName);
+      res.render('pages/view_form2.html', { user: user ,lists : lists});
+    });
   }
 
 });

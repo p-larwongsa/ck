@@ -1,0 +1,77 @@
+{%extends "layout/layout.html"%}
+{%block content%}
+
+<h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื่นที่ชลประทาน</h3>  
+<hr>
+
+<div class="container">
+<table id="form2table" name="form2table" class="display" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <td colspan="3"><center>รายชื่อเกษตกร</center></td>
+        <td colspan="3"><center>ความก้าวหน้า</center></td>
+        <td colspan="5"><center>%ความก้าวหน้าของแต่ละขั้นตอน</center></td> 
+        <td rowspan="2"><center>หมายเหตุ</center></td>
+      </tr>
+      <tr>
+        <td><center>คำนำหน้าชื่อ</center></td>
+        <td><center>ชื่อ</center></td>
+        <td><center>นามสกุล</center></td>     
+        <td><center>ดำเนินการแล้ว</center></td>
+        <td><center>ยังไม่ดำเนินการ</center></td>
+        <td><center>เพราะ</center></td>
+        <td><center>ขั้นตอน1</center></td>
+        <td><center>ขั้นตอน2</center></td>
+        <td><center>ขั้นตอน3</center></td>
+        <td><center>ขั้นตอน4</center></td>
+        <td><center>ขั้นตอน5</center></td>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>introName</td>
+        <td>firstName</td>
+        <td>lastName</td>
+        <td>do</td>
+        <td>dont</td>
+        <td>reason</td>
+        <td>process1</td>
+        <td>process2</td>
+        <td>process3</td>
+        <td>process4</td>
+        <td>process4</td>
+        <td>note</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--</div>-->
+
+<script type="text/javascript">
+    var obj = {{ lists | dump | safe}};
+    console.log(obj);
+    $('#form2table').DataTable({
+      data: obj,
+      "columns": [
+      { data : "introName" },
+      { data : "firstName" },
+      { data : "lastName" },
+      { data : "do" },
+      { data : "dont" },
+      { data : "reason" },
+      { data : "process1" },
+      { data : "process2" },
+      { data : "process3" },
+      { data : "process4" },
+      { data : "process5" },
+      { data : "note" },
+    ],
+      "pagingType": "full_numbers",
+      dom: 'Bfrtip',
+      buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+    });
+</script>
+	
+{%endblock%}

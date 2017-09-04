@@ -284,8 +284,8 @@ var cpUpload = upload.fields([{ name: 'photos', maxCount: 20 }]);
 //var newFilename = upload.rename(fieldname, filename.replace(ext, '')) + ext;
 app.post('/sendForm', cpUpload, function(req, res, next) {
   console.log('form : '+req.query.form);
-  //var date = moment().format();  
-  var date = moment().locale('th').format('DD MMMM YYYY');  
+  var date = moment().format('DD MMMM YYYY, h:mm:ss a');  
+  //var date = moment().locale('th').format('DD MMMM YYYY');  
   var form = req.query.form;
   if( form == 'form1') {
     //console.log(req.files['photos'][0].originalname);
@@ -308,7 +308,8 @@ app.post('/sendForm', cpUpload, function(req, res, next) {
       console.log(date);*/
       var id = callback.id;
       console.log(id);
-
+      console.log(req.files['photos'].length);
+    if(req.files['photos'].length > 0){
       for(var i = 0; i < req.files['photos'].length;i++){
         var pack = {
             name : req.files['photos'][i].originalname,
@@ -319,8 +320,12 @@ app.post('/sendForm', cpUpload, function(req, res, next) {
           console.log(callback);
         });
       }
-     res.redirect('/formPage'); 
+      res.redirect('/formPage'); 
+    }else{
+      res.redirect('/formPage');  
+    }
     });
+    
 
   }if( form == 'form2') {
     console.log(req.body);
@@ -349,6 +354,25 @@ app.post('/sendForm', cpUpload, function(req, res, next) {
   }
 });
 
+app.get('/view_form',function(req, res, next) {
+  var user = {};
+    user.email = req.cookies['email'];
+    user.username = req.cookies['username'];
+  var view = req.query.view;
+  if(view == 'form1'){
+    console.log('form1');
+    form1.find({},function(err,data){
+      var lists = data;
+      console.log(lists);
+      res.render('pages/view_form1.html', { user: user ,lists : lists});
+    });
+
+  }if(view == 'form2'){
+    console.log('form2');
+  }
+
+});
+
 /* ------------ Flowto Project ----------- */
 
 app.get('/projectPage',function(req, res, next) {
@@ -368,8 +392,7 @@ app.get('/projectPage',function(req, res, next) {
         //console.log(lists.length);
         //var number = lists.length;
         res.render('pages/project.html', { user: user ,lists : lists});   
-      });
-      
+      });      
     }
 });
 

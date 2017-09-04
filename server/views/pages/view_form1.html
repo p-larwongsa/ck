@@ -1,0 +1,91 @@
+{%extends "layout/layout.html"%}
+{%block content%}
+
+<h3 align="center">แบบฟอร์มติดตามมาตราการสร้างการรับรู้และประชาสัมพันธ์</h3>  
+<h4 align="center">โครงการสร้างการรับรู้และเสริมสร้างการเรียนรู้แก่เกษตรกร เพื่อลดความเสี่ยงจากภัยแล้ง</h4>
+<hr>
+
+<div class="container">
+<table id="form1table" name="form1table" class="display" cellspacing="0" width="100%">
+    <thead>
+      <tr>
+        <!--<th>หน่วยงาน</th>
+        <th>โครงการชลประทาน</th>
+        <th>จังหวัด</th> 
+        <th><center>ศ.พ.ก.<br>ครั้ง/เกษตรกร(คน)</center></th>
+        <th><center>JMC <br>ครั้ง/เกษตรกร(คน)</center></th>
+        <th><center>ข่าวประชาสัมพันธ์อื่นๆ<br>(ครั้ง)</center></th>
+        <th><center>ภาพถ่ายการลงพื้นที่</center></th>      
+        <th>Update</th>
+        <th>Delete</th>-->
+      <td rowspan="3">หน่วยงาน</td>
+        <td rowspan="3">โครงการชลประทาน</td>
+        <td rowspan="3">จังหวัด</td> 
+        <td colspan="4"><center>ผลการดำเนินการ</center></td>
+      </tr>
+      <tr>     
+        <td colspan="2"><center>ศ.พ.ก.</center></td>
+        <td colspan="2"><center>JMC</center></td>
+        <td rowspan="2"><center>ข่าวประชาสัมพันธ์อื่นๆ (ครั้ง)</center></td>
+        <!--<td rowspan="2"><center>ภาพถ่ายการลงพื้นที่</center></td>-->
+        <td rowspan="2"><center>รอบรายงาน</center></td>
+      </tr>
+      <tr>     
+        <td><center>ครั้ง</center></td>
+        <td><center>เกษตรกร(คน)</center></td>
+        <td><center>ครั้ง</center></td>
+        <td><center>เกษตรกร(คน)</center></td>
+      </tr>
+    </thead>
+    <tbody>
+   	  <!--{% for list in lists %}
+      <tr>	
+        <td>{{list.office_name}}</td>
+        <td>{{list.agency_name}}</td>
+        <td>{{list.province}}</td>
+        <td><center>{{list.SPK_time}} / {{list.SPK_person}}</center></td>
+        <td><center>{{list.JMC_time}} / {{list.JMC_person}}</center></td>
+        <td><center>{{list.news}}</center></td>
+      </tr>
+      {% endfor %} -->
+      <tr>
+        <td>office_name</td>
+        <td>agency_name</td>
+        <td>province</td>
+        <td>SPK_time</td>
+        <td>SPK_person</td>
+        <td>JMC_time</td>
+        <td>JMC_person</td>
+        <td>date</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<!--</div>-->
+
+
+<script type="text/javascript">
+    var obj = {{ lists | dump | safe}};
+    console.log(obj);
+    $('#form1table').DataTable({
+      data: obj,
+      "columns": [
+      { data : "office_name" },
+      { data : "agency_name" },
+      { data : "province" },
+      { data : "SPK_time" },
+      { data : "SPK_person" },
+      { data : "JMC_time" },
+      { data : "JMC_person" },
+      { data : "news" },
+      { data : "date" },
+    ],
+      "pagingType": "full_numbers",
+      dom: 'Bfrtip',
+      buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+      ]
+    });
+</script>
+	
+{%endblock%}

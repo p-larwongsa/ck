@@ -2,7 +2,15 @@ module.exports = function(app) {
   var request = require('request');
   var moment = require('moment');
   var multer  = require('multer');
-  var upload = multer({dest : 'uploads/'+moment().format('MMMM')});
+  var options = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/'+moment().format('MMMM'));
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now() + '-' + file.originalname);
+    }
+  });
+  var upload = multer({storage: options});
   var users = app.models.user;
   var reports =  app.models.Report;
   var projects =  app.models.Project;
@@ -22,6 +30,8 @@ module.exports = function(app) {
     var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
     if(!req.cookies['access_token']){
       res.render('pages/index.html');
     }else{
@@ -125,7 +135,8 @@ app.get('/auth/google/callback', function(req, res, next) {
               res.cookie('username', newUser.username);
               res.cookie('email', newUser.email);
               res.cookie('userId', accessToken.userId);
-
+              res.cookie('office_Name', emp_data.Account.ORG_NAME);
+              res.cookie('agency_Name', emp_data.Account.ORG_NAME1);
               //res.cookie('access_token', accessToken.id, { signed: true });
               //res.cookie('username', username, { signed: true });
               res.redirect('/');
@@ -144,6 +155,8 @@ app.get('/auth/google/callback', function(req, res, next) {
                 res.cookie('username', newUser.username);
                 res.cookie('email', newUser.email);
                 res.cookie('userId', accessToken.userId);
+                res.cookie('office_Name', emp_data.Account.ORG_NAME);
+                res.cookie('agency_Name', emp_data.Account.ORG_NAME1);
 
                 //res.cookie('access_token', accessToken.id, { signed: true });
                 //res.cookie('username', username, { signed: true });
@@ -153,9 +166,7 @@ app.get('/auth/google/callback', function(req, res, next) {
             }
           } // bigger else
         }); // user filter
-        
       }
-
       }); // request
 });
     }); // google get token
@@ -167,7 +178,6 @@ app.get('/auth/google/callback', function(req, res, next) {
         newUser.email="irrigation.wag@gmail.com";
         newUser.username= "irrigation.wag"; //split email
         newUser.password="owlahedwig";
-
 
         var filter={
           where:{"email":"irrigation.wag@gmail.com"} 
@@ -225,6 +235,8 @@ app.get('/auth/google/callback', function(req, res, next) {
       res.clearCookie('username');
       res.clearCookie('email');
       res.clearCookie('userId');
+      res.clearCookie('office_Name');
+      res.clearCookie('agency_Name');
       users.logout(req.cookies['access_token'], function(err) {
         if (err) return next(err);
         res.redirect('https://www.google.com/accounts/Logout?continue=https://appengine.google.com/_ah/logout?continue=http://localhost:3000/'); //on successful logout, redirect
@@ -238,6 +250,8 @@ app.get('/formPage',function(req, res, next) {
   var user = {};
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
+  user.officeName = req.cookies['office_Name'];
+  user.agencyName = req.cookies['agency_Name'];
   console.log("formPage Time : "+moment().locale('th').format('LLLL'));
   var date = moment().locale('th').format('DD MMMM YYYY')
   res.render('pages/form.html', {user:user, date:date})    
@@ -248,22 +262,14 @@ app.get('/form',function(req, res, next) {
   var user = {};
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
+  user.officeName = req.cookies['office_Name'];
+  user.agencyName = req.cookies['agency_Name'];
   var date = moment().locale('th').format('DD MMMM YYYY');
- 
-  rid_office.find({order: 'id ASC'},function(err,data){
-    var office_lists = data;
-    rid_agency.find({order: 'id ASC'},function(err,data){
-      var agency_lists = data 
-      var select_lists = {};
-      select_lists.agency = agency_lists;
-      select_lists.office = office_lists;
-      //console.log(select_lists);
 
     if(req.query.form == 'form1'){
       console.log('Form1'); 
       res.render('pages/form1.html', 
         { user : user ,
-          select_lists : select_lists, 
           date : date
         });
 
@@ -271,26 +277,19 @@ app.get('/form',function(req, res, next) {
       console.log('Form2');
       res.render('pages/form2.html', 
         { user : user ,
-          select_lists : select_lists, 
           date : date
         });
     }
-
-    });
-  });
 });
 
-//var cpUpload = upload.fields([{ name: 'photos', maxCount: 20 }]);
-//var newFilename = upload.rename(fieldname, filename.replace(ext, '')) + ext;
 app.post('/sendForm', upload.any(), function(req, res, next) {
   console.log('form : '+req.query.form);
   var date = moment().local('th').format('DD MMMM YYYY, h:mm:ss a');  
   //var date = moment().locale('th').format('DD MMMM YYYY');  
   var form = req.query.form;
+  console.log(req.body);
   if( form == 'form1') {
     console.log(req.files.length);
-    //console.log(req.files[0].originalname);
-//console.log(req.files['photos']);
     if(req.files.length == 0){
       console.log("photo 0 : "+req.files.length);
       console.log('no photo');
@@ -306,8 +305,7 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
       "date" : date,
       "user_id" : req.cookies['userId']
     };
-      form1.upsert(theForm1, function(err, callback) {
-      //var date = moment().format();               
+      form1.upsert(theForm1, function(err, callback) {           
       res.redirect('/formPage');
     });
 
@@ -326,8 +324,6 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
       "date" : date,
       "user_id" : req.cookies['userId']
     };
-   // console.log("00000"+req.files[0]);
-    //console.log("11111"+req.files[1].originalname);
       form1.upsert(theForm1, function(err, callback) {
       //var date = moment().format();               
       var id = callback.id;
@@ -337,8 +333,9 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
         console.log(i);
         console.log(form1_id);
         var pack = {
-            name : req.files[i].originalname,
-            path : req.files[i].path,
+            name : req.files[i].filename,
+            //path : req.files[i].path,
+            path : "uploads/"+ moment().format('MMMM') + '/' + req.files[i].filename,
             form1_id : id
         }
         console.log(pack);
@@ -348,7 +345,6 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
       
     }
     res.redirect('/formPage');
-    //console.log(pack);
     });
   }
 
@@ -384,13 +380,29 @@ app.get('/view_form',function(req, res, next) {
   var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
   var view = req.query.view;
   if(view == 'form1'){
     console.log('form1');
     form1.find({},function(err,data){
       var lists = data;
-      console.log(lists);
-      res.render('pages/view_form1.html', { user: user ,lists : lists});
+      var data = {}
+      var filter = {
+        where : {"form1_id": lists[0].id} 
+      }
+      console.log(data);
+      uploads.find( filter, function(err,data) {
+        var images = data;
+        for(var i = 0; i < images.length;i++){
+        //console.log(images[i].path);
+        //console.log(lists);
+        console.log(images[i].path);
+        console.log(lists[i]);
+        }
+        //res.render('pages/view_form1.html', { user: user ,lists: lists, images : images});
+      }); 
+      //res.render('pages/view_form1.html', { user: user ,lists: lists});
     });
 
   }if(view == 'form2'){
@@ -413,6 +425,8 @@ app.get('/projectPage',function(req, res, next) {
   var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
     if(!req.cookies['access_token']){
       return res.sendStatus(401);
     }else{
@@ -479,6 +493,8 @@ app.get('/TheProject',function(req, res, next) {
     var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
     
     var filter={
           where:{"projectId": data.id}
@@ -551,6 +567,8 @@ app.get('/modify',function(req, res, next) {
     var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
 
     console.log(req.cookies);
     if(req.cookies['userId'] != data.user_id){
@@ -590,6 +608,8 @@ app.get('/view_report', function(req, res) {
   var user = {};
   user.email = req.cookies['email'];
   user.username = req.cookies['username'];
+  user.officeName = req.cookies['office_Name'];
+  user.agencyName = req.cookies['agency_Name'];
 
   reports.findById(id, function(err, callback) {
     console.log('view_report ' + callback);

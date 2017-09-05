@@ -38,26 +38,13 @@
 
   <form action="/sendForm?form=form1" method="post" enctype="multipart/form-data">
   <div class="form-group">
-    <label for="InputOfficeName">เลือกหน่วยงาน</label> : 
-    <select class="selectpicker" data-live-search="true" id="InputOfficeName" name="InputOfficeName">
-      <option value="">--- เลือกหน่วยงาน ---</option>
-      {% for list in select_lists.office %}
-      <option value="{{list.office_name}}" >{{list.office_name}}</option>
-      {% endfor %}
-    </select>
-
+    <label for="InputOfficeName">สำนักงานชลประทานที่</label> : 
+    <input type="text" class="form-control" id="InputOfficeName" name="InputOfficeName" value="{{user.officeName}}" readonly />
   </div>
   <div class="form-group">
     <label for="InputAgencyName">โครงการชลประทาน</label> : 
-
-    <select class="selectpicker" data-live-search="true" id="InputAgencyName" name="InputAgencyName">
-      <option value="">--- เลือกโครงการ ---</option>
-      {% for list in select_lists.agency %}
-      <option value="{{list.agency_name}}" >{{list.agency_name}}</option>
-      {% endfor %}
-      </select>
+    <input type="text" class="form-control" id="InputAgencyName" name="InputAgencyName" value="{{user.agencyName}}" readonly />
   </div>
-
 
   <div class="form-group">
     <label for="province">จังหวัด</label> : 

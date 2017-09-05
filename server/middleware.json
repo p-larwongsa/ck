@@ -42,13 +42,14 @@
   },
   "files": {
     "loopback#static": [
-      {
+      { "name" : "css",
         "paths": "/css",
         "params": "$!../css"
       },
       {
-        "paths": "/upload",
-        "params": "$!../upload"
+        "name" : "uploads",
+        "paths": "/uploads",
+        "params": "$!../uploads"
       }
     ]
   },

@@ -31,7 +31,7 @@
       "type": "number"
     },
     "form1_date": {
-      "type": "date"
+      "type": "string"
     },
     "user_id": {
       "type": "number"

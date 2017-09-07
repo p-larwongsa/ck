@@ -41,7 +41,13 @@
     }
   },
   "validations": [],
-  "relations": {},
+  "relations": {
+    "Uploads": {
+      "type": "hasMany",
+      "model": "Uploads",
+      "foreignKey": "form1_id"
+    }
+  },
   "acls": [],
   "methods": {}
 }

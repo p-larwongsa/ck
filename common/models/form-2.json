@@ -49,10 +49,13 @@
       "type": "string"
     },
     "form2_date": {
-      "type": "date"
+      "type": "string"
     },
     "user_id": {
       "type": "number"
+    },
+    "date": {
+      "type": "date"
     }
   },
   "validations": [],

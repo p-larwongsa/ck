@@ -137,8 +137,6 @@ app.get('/auth/google/callback', function(req, res, next) {
               res.cookie('userId', accessToken.userId);
               res.cookie('office_Name', emp_data.Account.ORG_NAME);
               res.cookie('agency_Name', emp_data.Account.ORG_NAME1);
-              //res.cookie('access_token', accessToken.id, { signed: true });
-              //res.cookie('username', username, { signed: true });
               res.redirect('/');
               }); // login
             }else{ // not have account
@@ -157,9 +155,6 @@ app.get('/auth/google/callback', function(req, res, next) {
                 res.cookie('userId', accessToken.userId);
                 res.cookie('office_Name', emp_data.Account.ORG_NAME);
                 res.cookie('agency_Name', emp_data.Account.ORG_NAME1);
-
-                //res.cookie('access_token', accessToken.id, { signed: true });
-                //res.cookie('username', username, { signed: true });
                 res.redirect('/');
                 }); // login
               }); // create
@@ -284,7 +279,8 @@ app.get('/form',function(req, res, next) {
 
 app.post('/sendForm', upload.any(), function(req, res, next) {
   console.log('form : '+req.query.form);
-  var date = moment().local('th').format('DD MMMM YYYY, h:mm:ss a');  
+  var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a');  
+  console.log(date);
   //var date = moment().locale('th').format('DD MMMM YYYY');  
   var form = req.query.form;
   console.log(req.body);
@@ -303,6 +299,7 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
       "JMC_person" : req.body.JMC_person,
       "news" : req.body.InputNews,
       "date" : date,
+      "form1_date" : req.body.date1,
       "user_id" : req.cookies['userId']
     };
       form1.upsert(theForm1, function(err, callback) {           
@@ -322,6 +319,7 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
       "JMC_person" : req.body.JMC_person,
       "news" : req.body.InputNews,
       "date" : date,
+      "form1_date" : req.body.date1,
       "user_id" : req.cookies['userId']
     };
       form1.upsert(theForm1, function(err, callback) {
@@ -351,6 +349,7 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
   }if( form == 'form2') {
     console.log(req.body);
     var theForm2 = {
+      "form2_date" : req.body.date2,
       "office_name" : req.body.InputOfficeName,
       "agency_name" : req.body.InputAgencyName,
       "introName" : req.body.introName,
@@ -365,7 +364,7 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
       "process4" : req.body.process4,
       "process5" : req.body.process5,
       "note" : req.body.note,
-      "form2_date" : date,
+      "date" : date,
       "user_id" : req.cookies['userId']
     };
     form2.upsert(theForm2, function(err, callback) {
@@ -385,24 +384,14 @@ app.get('/view_form',function(req, res, next) {
   var view = req.query.view;
   if(view == 'form1'){
     console.log('form1');
-    form1.find({},function(err,data){
-      var lists = data;
-      var data = {}
-      var filter = {
-        where : {"form1_id": lists[0].id} 
+    form1.find({
+      include: {
+        relation: 'Uploads'
       }
-      console.log(data);
-      uploads.find( filter, function(err,data) {
-        var images = data;
-        for(var i = 0; i < images.length;i++){
-        //console.log(images[i].path);
-        //console.log(lists);
-        console.log(images[i].path);
-        console.log(lists[i]);
-        }
-        //res.render('pages/view_form1.html', { user: user ,lists: lists, images : images});
-      }); 
-      //res.render('pages/view_form1.html', { user: user ,lists: lists});
+    },function(err,data){
+      var lists = data; 
+      console.log(data);  
+      res.render('pages/view_form1.html', { user: user ,lists: lists});
     });
 
   }if(view == 'form2'){

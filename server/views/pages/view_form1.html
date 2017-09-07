@@ -9,39 +9,26 @@
 <table id="form1table" name="form1table" class="display" cellspacing="0" width="100%">
     <thead>
       <tr>
-      <td rowspan="3">หน่วยงาน</td>
-        <td rowspan="3">โครงการชลประทาน</td>
-        <td rowspan="3">จังหวัด</td> 
-        <td colspan="4"><center>ผลการดำเนินการ</center></td>
+        <th rowspan="3">หน่วยงาน</th>
+        <th rowspan="3">โครงการชลประทาน</th>
+        <th rowspan="3">จังหวัด</th> 
+        <th colspan="4"><center>ผลการดำเนินการ</center></th>
       </tr>
       <tr>     
-        <td colspan="2"><center>ศ.พ.ก.</center></td>
-        <td colspan="2"><center>JMC</center></td>
-        <td rowspan="2"><center>ข่าวประชาสัมพันธ์อื่นๆ (ครั้ง)</center></td>
-        <td rowspan="2"><center>ภาพถ่ายการลงพื้นที่</center></td>
-        <!--<td rowspan="2"><center>แก้ไข</center></td>
-        <td rowspan="2"><center>ลบ</center></td>-->
+        <th colspan="2"><center>ศ.พ.ก.</center></th>
+        <th colspan="2"><center>JMC</center></th>
+        <th rowspan="2"><center>ข่าวประชาสัมพันธ์อื่นๆ (ครั้ง)</center></th>
+        <th rowspan="2"><center>ภาพถ่ายการลงพื้นที่</center></th>
+        <th rowspan="2"><center>แก้ไข/ ลบ</center></th>
+
       </tr>
       <tr>     
-        <td><center>ครั้ง</center></td>
-        <td><center>เกษตรกร(คน)</center></td>
-        <td><center>ครั้ง</center></td>
-        <td><center>เกษตรกร(คน)</center></td>
+        <th><center>ครั้ง</center></th>
+        <th><center>เกษตรกร(คน)</center></th>
+        <th><center>ครั้ง</center></th>
+        <th><center>เกษตรกร(คน)</center></th>
       </tr>
     </thead>
-    <tbody>
-      <tr>
-        <td>office_name</td>
-        <td>agency_name</td>
-        <td>province</td>
-        <td>SPK_time</td>
-        <td>SPK_person</td>
-        <td>JMC_time</td>
-        <td>JMC_person</td>
-        <td>Uploads</td>
-        
-      </tr>
-    </tbody>
   </table>
 </div>
 <!--</div>-->
@@ -49,9 +36,6 @@
 
 <script type="text/javascript">
     var obj = {{ lists | dump | safe}};
-    //console.log(obj);
-    //console.log(obj[1].Uploads[0].path);
-
     $('#form1table').DataTable({
       data: obj,
       "columns": [
@@ -64,16 +48,7 @@
       { data : "JMC_person" },
       { data : "news" },
       { data : "Uploads" , render: function(d){
-        console.log(JSON.stringify(d));
-        return d;
-        /*for(i=0; i<d.length; i++){
-          console.log(d[0].path);
-        }*/
-        //return (d);
-          /*for(var i=0; i<d.length; i++){
-            var im = d[i].path;
-            return '<img src='+im+'/>';
-          }*/
+        return d.length ? d.length + ' '+'image(s)' : 'No image'; 
           
         }
       },
@@ -81,7 +56,7 @@
       //{ data: "img", "render": img},
       /*{
         "render" : function(data, type, full, meta){
-          return '<a class="btn btn-defalt" href="#"><span class="glyphicon glyphicon-pencil"></span></a>';
+          return '<a class="btn btn-success" href="#"><span class="glyphicon glyphicon-pencil"></span></a>';
         }
       },
       {
@@ -89,7 +64,10 @@
           return '<a class="btn btn-danger" href="#"><span class="glyphicon glyphicon-trash"></span></a>';
         }
       }*/
-
+      { data : "id" , render : function(data) {
+        return '<div class="input-group"><span class="input-group-btn"><a href="/edit_form1?id='+data+'" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a></span><span class="input-group-btn"><a href="/delete_form1?id='+data+'" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></span></div>'
+        }
+      }
     ],
       "pagingType": "full_numbers",
       dom: 'Bfrtip',
@@ -98,16 +76,7 @@
       ]
       
     });
-    function img(data, type, full, meta){
-      //var obj = {{ lists | dump | safe}};
-      /*obj.forEach(function(entry){
-        for(var i=0; i<5; i++){
-          console.log(entry[i]);
-        }
-      });*/
-      
-      return '<img src=obj[1].Uploads[0].path/>';
-    }
+
 </script>
 	
 {%endblock%}

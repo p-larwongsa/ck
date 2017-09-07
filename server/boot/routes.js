@@ -390,7 +390,7 @@ app.get('/view_form',function(req, res, next) {
       }
     },function(err,data){
       var lists = data; 
-      console.log(data);  
+      //console.log(data);  
       res.render('pages/view_form1.html', { user: user ,lists: lists});
     });
 
@@ -605,6 +605,14 @@ app.get('/view_report', function(req, res) {
     var RBbody = callback;
   
     res.render('pages/view_report.html', { user : user, RBbody : RBbody});
+  });
+});
+
+app.get('/delete_form1', function(req, res){
+  console.log(req.query);
+  var id = req.query.id; 
+  form1.findById(id,function(err,callback){
+    console.log(callback);
   });
 });
 

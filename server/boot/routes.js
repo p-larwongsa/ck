@@ -239,172 +239,6 @@ app.get('/auth/google/callback', function(req, res, next) {
     } // else
   }); //get logout
 
-/* ------------- Form ----------------- */
-
-app.get('/formPage',function(req, res, next) {
-  var user = {};
-  user.email = req.cookies['email'];
-  user.username = req.cookies['username'];
-  user.officeName = req.cookies['office_Name'];
-  user.agencyName = req.cookies['agency_Name'];
-  console.log("formPage Time : "+moment().locale('th').format('LLLL'));
-  var date = moment().locale('th').format('DD MMMM YYYY')
-  res.render('pages/form.html', {user:user, date:date})    
-});
-
-app.get('/form',function(req, res, next) {
-  console.log(req.query);
-  var user = {};
-  user.email = req.cookies['email'];
-  user.username = req.cookies['username'];
-  user.officeName = req.cookies['office_Name'];
-  user.agencyName = req.cookies['agency_Name'];
-  var date = moment().locale('th').format('DD MMMM YYYY');
-
-    if(req.query.form == 'form1'){
-      console.log('Form1'); 
-      res.render('pages/form1.html', 
-        { user : user ,
-          date : date
-        });
-
-    }if(req.query.form == 'form2'){
-      console.log('Form2');
-      res.render('pages/form2.html', 
-        { user : user ,
-          date : date
-        });
-    }
-});
-
-app.post('/sendForm', upload.any(), function(req, res, next) {
-  console.log('form : '+req.query.form);
-  var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a');  
-  console.log(date);
-  //var date = moment().locale('th').format('DD MMMM YYYY');  
-  var form = req.query.form;
-  console.log(req.body);
-  if( form == 'form1') {
-    console.log(req.files.length);
-    if(req.files.length == 0){
-      console.log("photo 0 : "+req.files.length);
-      console.log('no photo');
-      var theForm1 = {
-      "office_name" : req.body.InputOfficeName,
-      "agency_name" : req.body.InputAgencyName,
-      "province" : req.body.province,
-      "SPK_time" : req.body.SPK_time,
-      "SPK_person" : req.body.SPK_person,
-      "JMC_time" : req.body.JMC_time,
-      "JMC_person" : req.body.JMC_person,
-      "news" : req.body.InputNews,
-      "date" : date,
-      "form1_date" : req.body.date1,
-      "user_id" : req.cookies['userId']
-    };
-      form1.upsert(theForm1, function(err, callback) {           
-      res.redirect('/formPage');
-    });
-
-    }if(req.files.length > 0){
-      console.log("photo > 0 : "+req.files.length);
-      console.log(req.files[0].originalname);
-      var theForm1 = {
-      "office_name" : req.body.InputOfficeName,
-      "agency_name" : req.body.InputAgencyName,
-      "province" : req.body.province,
-      "SPK_time" : req.body.SPK_time,
-      "SPK_person" : req.body.SPK_person,
-      "JMC_time" : req.body.JMC_time,
-      "JMC_person" : req.body.JMC_person,
-      "news" : req.body.InputNews,
-      "date" : date,
-      "form1_date" : req.body.date1,
-      "user_id" : req.cookies['userId']
-    };
-      form1.upsert(theForm1, function(err, callback) {
-      //var date = moment().format();               
-      var id = callback.id;
-      console.log(id);
-      var form1_id = id;
-      for(var i = 0; i < req.files.length;i++){
-        console.log(i);
-        console.log(form1_id);
-        var pack = {
-            name : req.files[i].filename,
-            //path : req.files[i].path,
-            path : "uploads/"+ moment().format('MMMM') + '/' + req.files[i].filename,
-            form1_id : id
-        }
-        console.log(pack);
-        uploads.upsert(pack,function(err,callback){
-          console.log(callback);
-        });
-      
-    }
-    res.redirect('/formPage');
-    });
-  }
-
-  }if( form == 'form2') {
-    console.log(req.body);
-    var theForm2 = {
-      "form2_date" : req.body.date2,
-      "office_name" : req.body.InputOfficeName,
-      "agency_name" : req.body.InputAgencyName,
-      "introName" : req.body.introName,
-      "firstName" : req.body.firstName,
-      "lastName" : req.body.lastName,
-      "do" : req.body.Do,
-      "dont" : req.body.Dont,
-      "reason" : req.body.reason,
-      "process1" : req.body.process1,
-      "process2" : req.body.process2,
-      "process3" : req.body.process3,
-      "process4" : req.body.process4,
-      "process5" : req.body.process5,
-      "note" : req.body.note,
-      "date" : date,
-      "user_id" : req.cookies['userId']
-    };
-    form2.upsert(theForm2, function(err, callback) {
-      //console.log(callback);
-      //var message = "กรอกข้อมูลสำเร็จ";
-      res.redirect('/formPage');  
-    });
-  }
-});
-
-app.get('/view_form',function(req, res, next) {
-  var user = {};
-    user.email = req.cookies['email'];
-    user.username = req.cookies['username'];
-    user.officeName = req.cookies['office_Name'];
-    user.agencyName = req.cookies['agency_Name'];
-  var view = req.query.view;
-  if(view == 'form1'){
-    console.log('form1');
-    form1.find({
-      include: {
-        relation: 'Uploads'
-      }
-    },function(err,data){
-      var lists = data; 
-      //console.log(data);  
-      res.render('pages/view_form1.html', { user: user ,lists: lists});
-    });
-
-  }if(view == 'form2'){
-    console.log('form2');
-    form2.find({},function(err,data){
-      var lists = data;
-      console.log(lists.firstName);
-      res.render('pages/view_form2.html', { user: user ,lists : lists});
-    });
-  }
-
-});
-
 /* ------------ Flowto Project ----------- */
 
 app.get('/projectPage',function(req, res, next) {
@@ -608,11 +442,200 @@ app.get('/view_report', function(req, res) {
   });
 });
 
-app.get('/delete_form1', function(req, res){
+/* ------------- Form ----------------- */
+
+app.get('/formPage',function(req, res, next) {
+  var user = {};
+  user.email = req.cookies['email'];
+  user.username = req.cookies['username'];
+  user.officeName = req.cookies['office_Name'];
+  user.agencyName = req.cookies['agency_Name'];
+  console.log("formPage Time : "+moment().locale('th').format('LLLL'));
+  var date = moment().locale('th').format('DD MMMM YYYY')
+  res.render('pages/form.html', {user:user, date:date})    
+});
+
+app.get('/form',function(req, res, next) {
+  console.log(req.query);
+  var user = {};
+  user.email = req.cookies['email'];
+  user.username = req.cookies['username'];
+  user.officeName = req.cookies['office_Name'];
+  user.agencyName = req.cookies['agency_Name'];
+  var date = moment().locale('th').format('DD MMMM YYYY');
+
+    if(req.query.form == 'form1'){
+      console.log('Form1'); 
+      res.render('pages/form1.html', 
+        { user : user ,
+          date : date
+        });
+
+    }if(req.query.form == 'form2'){
+      console.log('Form2');
+      res.render('pages/form2.html', 
+        { user : user ,
+          date : date
+        });
+    }
+});
+
+app.post('/sendForm', upload.any(), function(req, res, next) {
+  console.log('form : '+req.query.form);
+  var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a');  
+  console.log(date);
+  //var date = moment().locale('th').format('DD MMMM YYYY');  
+  var form = req.query.form;
+  console.log(req.body);
+  if( form == 'form1') {
+    console.log('query : '+req.query);
+    console.log('body : '+req.body);
+    console.log(req.files.length);
+    if(req.files.length == 0){
+      console.log("photo 0 : "+req.files.length);
+      console.log('no photo');
+      var theForm1 = {
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "province" : req.body.province,
+      "SPK_time" : req.body.SPK_time,
+      "SPK_person" : req.body.SPK_person,
+      "JMC_time" : req.body.JMC_time,
+      "JMC_person" : req.body.JMC_person,
+      "news" : req.body.InputNews,
+      "date" : date,
+      "form1_date" : req.body.date1,
+      "user_id" : req.cookies['userId']
+    };
+      form1.upsert(theForm1, function(err, callback) {           
+      res.redirect('/formPage');
+    });
+
+    }if(req.files.length > 0){
+      console.log("photo > 0 : "+req.files.length);
+      console.log(req.files[0].originalname);
+      var theForm1 = {
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "province" : req.body.province,
+      "SPK_time" : req.body.SPK_time,
+      "SPK_person" : req.body.SPK_person,
+      "JMC_time" : req.body.JMC_time,
+      "JMC_person" : req.body.JMC_person,
+      "news" : req.body.InputNews,
+      "date" : date,
+      "form1_date" : req.body.date1,
+      "user_id" : req.cookies['userId']
+    };
+     form1.upsert(theForm1, function(err, callback) {
+      //var date = moment().format();               
+      var id = callback.id;
+      console.log(id);
+      var form1_id = id;
+      for(var i = 0; i < req.files.length;i++){
+        console.log(i);
+        console.log(form1_id);
+        var pack = {
+            name : req.files[i].filename,
+            //path : req.files[i].path,
+            path : "uploads/"+ moment().format('MMMM') + '/' + req.files[i].filename,
+            form1_id : id
+        }
+        console.log(pack);
+        uploads.upsert(pack,function(err,callback){
+          console.log(callback);
+        });
+      
+    }
+    res.redirect('/formPage');
+    });
+  }
+
+  }if( form == 'form2') {
+    console.log(req.body);
+    var theForm2 = {
+      "form2_date" : req.body.date2,
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "introName" : req.body.introName,
+      "firstName" : req.body.firstName,
+      "lastName" : req.body.lastName,
+      "do" : req.body.Do,
+      "dont" : req.body.Dont,
+      "reason" : req.body.reason,
+      "process1" : req.body.process1,
+      "process2" : req.body.process2,
+      "process3" : req.body.process3,
+      "process4" : req.body.process4,
+      "process5" : req.body.process5,
+      "note" : req.body.note,
+      "date" : date,
+      "user_id" : req.cookies['userId']
+    };
+    form2.upsert(theForm2, function(err, callback) {
+      //console.log(callback);
+      //var message = "กรอกข้อมูลสำเร็จ";
+      res.redirect('/formPage');  
+    });
+  }
+});
+
+app.get('/view_form',function(req, res, next) {
+  var user = {};
+    user.email = req.cookies['email'];
+    user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
+  var view = req.query.view;
+  if(view == 'form1'){
+    console.log('form1');
+    form1.find({
+      include: {
+        relation: 'Uploads'
+      }
+    },function(err,data){
+      var lists = data; 
+      //console.log(data);  
+      res.render('pages/view_form1.html', { user: user ,lists: lists});
+    });
+
+  }if(view == 'form2'){
+    console.log('form2');
+    form2.find({},function(err,data){
+      var lists = data;
+      console.log(lists.firstName);
+      res.render('pages/view_form2.html', { user: user ,lists : lists});
+    });
+  }
+
+});
+
+app.post('/delete_form1', function(req, res){
+  console.log(req.body);
+  var id = req.body.delId; 
+  form1.destroyById(id,function(err){
+    console.log(err);
+    //var filter = { where: { "form1_id" : id}};
+    uploads.destroyAll({ "form1_id" : req.body.delId}, function(err,info){
+      console.log(info);
+    res.redirect('/view_form?view=form1');
+    });
+  });
+});
+
+app.get('/chkform1', function(req,res) {
   console.log(req.query);
   var id = req.query.id; 
-  form1.findById(id,function(err,callback){
+  form1.findById(id, function(err, callback){
     console.log(callback);
+    var data = {};
+    data.form1 = callback;
+    var filter = { where: { "form1_id" : req.query.id}};
+    uploads.find(filter, function(err,callback){
+      data.image = callback;
+      console.log(data);
+      res.send(data);
+    });   
   });
 });
 

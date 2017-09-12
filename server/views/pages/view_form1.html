@@ -34,7 +34,7 @@
 <!--</div>-->
 
 
- <!-- Modal Delete Form -->
+ <!-- Modal Edit Form -->
   <div class="modal fade" id="edit" role="dialog">
     <div class="modal-dialog">
       <!-- Modal content-->
@@ -44,9 +44,7 @@
           <h4 class="modal-title" value="แก้ไขรายงาน"></h4>
         </div>
         <!-- Modal body-->
-        <form method="post" action="/delete">
         <div class="modal-body">
-
 
   <fieldset class="form-group">
   <h3 align="center">แบบฟอร์มติดตามมาตราการสร้างการรับรู้และประชาสัมพันธ์</h3>  
@@ -75,12 +73,9 @@
     <label for="date1">รอบวันที่</label> : 
     <select class="selectpicker" id="date1" name="date1">
       <option value="" selected>--------- รอบวันที่ ---------</option>
-      <option value="">{{date}}</option>
-      <option value="กระบี่">กระบี่ </option>
-      <option value="กาญจนบุรี">กาญจนบุรี </option>
-      <option value="กาฬสินธุ์">กาฬสินธุ์ </option>
-      <option value="กำแพงเพชร">กำแพงเพชร </option>
-      <option value="ขอนแก่น">ขอนแก่น</option>
+      <option value="12 September 2017">12 September 2017</option>
+      <option value="19 September 2017">19 September 2017</option>
+      <option value="26 September 2017">26 September 2017</option>
     </select>
   </div>
 
@@ -225,14 +220,14 @@
         </div> <!-- //Modal body-->
         <div class="modal-footer">
           <input type="hidden" name="id" id="id" />
-          <input type="submit" class="btn btn-primary" value="ส่ง" />
+          <input type="submit" id="btn_upload" name="btn_upload" class="btn btn-primary" value="ส่ง">
           <button type="button" class="btn btn-default" data-dismiss="modal">ปิด</button>
         </div>
        </form> <!-- form -->
 
       </div> <!-- //Modal content-->
     </div>
-  </div>  <!-- //Modal Delete Form -->
+  </div>  <!-- //Modal Edit Form -->
 
      <!-- Modal Delete Form -->
   <div class="modal fade" id="delForm1" role="dialog">
@@ -322,6 +317,8 @@
           $('#imgs').empty();
           $('#edit').modal('show');
           $('.modal-title').text('แก้ไขรายงาน');
+          $('#date1').selectpicker('val',response.form1.form1_date);
+          $('#id').val(response.form1.id);
           $('#InputOfficeName').val(response.form1.office_name);
           $('#InputAgencyName').val(response.form1.agency_name);
           $('#province').selectpicker('val', response.form1.province);

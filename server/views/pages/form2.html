@@ -12,7 +12,9 @@
     <label for="date2">รอบวันที่</label> : 
     <select class="selectpicker" id="date2" name="date2">
       <option value="" selected>--------- รอบวันที่ ---------</option>
-      <option value="{{date}}">{{date}}</option>
+      <option value="12 September 2017">12 September 2017</option>
+      <option value="19 September 2017">19 September 2017</option>
+      <option value="26 September 2017">26 September 2017</option>
     </select>
   </div>
   <div class="form-group">
@@ -80,7 +82,7 @@
       ขั้นตอนที่ 1
     </label>
     <div class="container" >
-      <div class="form-group" id="process1" style="display:none">
+      <div class="form-group" id="Process1" style="display:none">
         <textarea class="form-control" rows="5" id="process1" name="process1"></textarea>
       </div>
     </div>
@@ -92,7 +94,7 @@
       ขั้นตอนที่ 2
     </label>
     <div class="container" >
-      <div class="form-group" id="process2" style="display:none">
+      <div class="form-group" id="Process2" style="display:none">
         <textarea class="form-control" rows="5" id="process2" name="process2"></textarea>
       </div>
     </div>
@@ -104,7 +106,7 @@
       ขั้นตอนที่ 3
     </label>
     <div class="container" >
-      <div class="form-group" id="process3" style="display:none">
+      <div class="form-group" id="Process3" style="display:none">
         <textarea class="form-control" rows="5" id="process3" name="process3"></textarea>
       </div>
     </div>
@@ -116,7 +118,7 @@
       ขั้นตอนที่ 4
     </label>
     <div class="container" >
-      <div class="form-group" id="process4" style="display:none">
+      <div class="form-group" id="Process4" style="display:none">
         <textarea class="form-control" rows="5" id="process4" name="process4"></textarea>
       </div>
     </div>
@@ -128,7 +130,7 @@
       ขั้นตอนที่ 5
     </label>
     <div class="container" >
-      <div class="form-group" id="process5" style="display:none">
+      <div class="form-group" id="Process5" style="display:none">
         <textarea class="form-control" rows="5" id="process5" name="process5"></textarea>
       </div>
     </div>
@@ -160,19 +162,19 @@
     });
 
     $('#ChkProcess1').click(function() {
-    $("#process1").toggle(this.checked);
+    $("#Process1").toggle(this.checked);
     });
     $('#ChkProcess2').click(function() {
-    $("#process2").toggle(this.checked);
+    $("#Process2").toggle(this.checked);
     });
     $('#ChkProcess3').click(function() {
-    $("#process3").toggle(this.checked);
+    $("#Process3").toggle(this.checked);
     });
     $('#ChkProcess4').click(function() {
-    $("#process4").toggle(this.checked);
+    $("#Process4").toggle(this.checked);
     });
     $('#ChkProcess5').click(function() {
-    $("#process5").toggle(this.checked);
+    $("#Process5").toggle(this.checked);
     });
 </script>
 

@@ -489,12 +489,12 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
   console.log(req.body);
   if( form == 'form1') {
     console.log('query : '+req.query);
-    console.log('body : '+req.body);
     console.log(req.files.length);
     if(req.files.length == 0){
       console.log("photo 0 : "+req.files.length);
       console.log('no photo');
       var theForm1 = {
+      "id" : req.body.id,
       "office_name" : req.body.InputOfficeName,
       "agency_name" : req.body.InputAgencyName,
       "province" : req.body.province,
@@ -515,6 +515,7 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
       console.log("photo > 0 : "+req.files.length);
       console.log(req.files[0].originalname);
       var theForm1 = {
+      "id" : req.body.id,
       "office_name" : req.body.InputOfficeName,
       "agency_name" : req.body.InputAgencyName,
       "province" : req.body.province,
@@ -554,6 +555,7 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
   }if( form == 'form2') {
     console.log(req.body);
     var theForm2 = {
+      "id": req.body.id,
       "form2_date" : req.body.date2,
       "office_name" : req.body.InputOfficeName,
       "agency_name" : req.body.InputAgencyName,
@@ -603,7 +605,7 @@ app.get('/view_form',function(req, res, next) {
     console.log('form2');
     form2.find({},function(err,data){
       var lists = data;
-      console.log(lists.firstName);
+      //console.log(lists);
       res.render('pages/view_form2.html', { user: user ,lists : lists});
     });
   }
@@ -638,5 +640,25 @@ app.get('/chkform1', function(req,res) {
     });   
   });
 });
+
+/* ------------- form2 ----------------- */
+app.get('/chkform2', function(req,res) {
+  console.log(req.query);
+  var id = req.query.id; 
+  form2.findById(id, function(err, callback){
+    console.log(callback);
+    var data = callback;
+    res.send(data);
+  });
+});
+
+app.post('/delete_form2', function(req, res){
+  console.log(req.body);
+  var id = req.body.Delid; 
+  form2.destroyById(id,function(err){
+    console.log(err);
+    res.redirect('/view_form?view=form2');
+    });
+  });
 
 }

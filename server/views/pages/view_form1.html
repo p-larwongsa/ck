@@ -6,6 +6,10 @@
 <hr>
 
 <div class="container">
+<div  align="right">
+      <button type="button" class="btn btn-info" id="add_form1">เพิ่ม</button>
+  </div>
+  </br>
 <table id="form1table" name="form1table" class="display" cellspacing="0" width="100%">
     <thead>
       <tr>
@@ -35,7 +39,7 @@
 
 
  <!-- Modal Edit Form -->
-  <div class="modal fade" id="edit" role="dialog">
+  <div class="modal fade" id="form1" role="dialog">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content">
@@ -181,7 +185,7 @@
       ศ.พ.ก.
     </label>
     <div class="container" >
-    <div class="col-xs-3" id="checkForm1">
+    <div class="col-xs-3" id="checkForm1" style="display:none">
       <label for="SPK_time">ครั้ง</label>
       <input type="text" class="form-control" id="SPK_time" name="SPK_time">
 
@@ -198,7 +202,7 @@
       JMC
     </label>
     <div class="container" >
-    <div class="col-xs-3" id="checkForm2">
+    <div class="col-xs-3" id="checkForm2" style="display:none">
       <label for="JMC_time">ครั้ง</label>
       <input type="text" class="form-control" id="JMC_time" name="JMC_time">
 
@@ -288,61 +292,84 @@
       
     });
 
-    function deleteForm1(id) {
-      $.ajax({
-            url: '/chkform1',
-            type: 'GET',
-            data: {id : id},
-            dataType: 'json',
-           success: function(response) {
-              console.log(response);   
-              $('#delForm1').modal('show');
-              $('.modal-title').text('ลบรายงาน');
-              $('#Delbody').text('ยืนยันการลบรายงานนี้');
-              $('#delId').val(response.form1.id);
-              $('#action').val('ลบ');
-            }
-        });
-    }
 
-  function edit(id){
+$("#add_form1").click(function(){
+  $('#imgs').empty();
+  $('#form1').modal('show');
+  $('.modal-title').text('เพิ่มรายงาน');
+  $('#id').val('');
+  $('#date1').selectpicker('val','');
+  $('#province').selectpicker('val', '');
+  $('#InputOfficeName').val('{{user.officeName}}');
+  $('#InputAgencyName').val('{{user.agencyName}}');
+  $( '#check1' ).prop( "checked", false );      
+  $( '#check2' ).prop( "checked", false );
+  $('#SPK_time').val('');
+  $('#SPK_person').val('');   
+  $('#JMC_time').val('');
+  $('#JMC_person').val('');
+  $('#InputNews').val('');
+});
+
+  function deleteForm1(id) {
     $.ajax({
         url: '/chkform1',
         type: 'GET',
-        data: {id : id}, 
-        //contentType: 'application/json',
+        data: {id : id},
         dataType: 'json',
        success: function(response) {
-         console.log(response);
-          $('#imgs').empty();
-          $('#edit').modal('show');
-          $('.modal-title').text('แก้ไขรายงาน');
-          $('#date1').selectpicker('val',response.form1.form1_date);
-          $('#id').val(response.form1.id);
-          $('#InputOfficeName').val(response.form1.office_name);
-          $('#InputAgencyName').val(response.form1.agency_name);
-          $('#province').selectpicker('val', response.form1.province);
-          $( '#check1' ).prop( "checked", true );      
-          $( '#check2' ).prop( "checked", true );
-          $('#SPK_time').val(response.form1.SPK_time);
-          $('#SPK_person').val(response.form1.SPK_person);
-          $('#JMC_time').val(response.form1.JMC_time);
-          $('#JMC_person').val(response.form1.JMC_person);
-          $('#InputNews').val(response.form1.news);
-          for(var j=0; j<response.image.length; j++){
-              console.log(response.image[j].form1_id);
-              $('.div_image').append('  <img src="' + response.image[j].path + '  " style="width: 200px; height: 100px"/>');                  
-            }
+          console.log(response);   
+          $('#delForm1').modal('show');
+          $('.modal-title').text('ลบรายงาน');
+          $('#Delbody').text('ยืนยันการลบรายงานนี้');
+          $('#delId').val(response.form1.id);
+          $('#action').val('ลบ');
+        }
+    });
+  }
+
+  $('#btn_upload').click(function() {
+    location.reload();
+  });
+  
+  function edit(id){
+    $.ajax({
+      url: '/chkform1',
+      type: 'GET',
+      data: {id : id}, 
+      //contentType: 'application/json',
+      dataType: 'json',
+     success: function(response) {
+       console.log(response);
+        $('#imgs').empty();
+        $('#form1').modal('show');
+        $('.modal-title').text('แก้ไขรายงาน');
+        $('#date1').selectpicker('val',response.form1.form1_date);
+        $('#id').val(response.form1.id);
+        $('#InputOfficeName').val(response.form1.office_name);
+        $('#InputAgencyName').val(response.form1.agency_name);
+        $('#province').selectpicker('val', response.form1.province);
+        $( '#check1' ).prop( "checked", true );      
+        $( '#check2' ).prop( "checked", true );
+        $('#SPK_time').val(response.form1.SPK_time);
+        $('#SPK_person').val(response.form1.SPK_person);
+        $('#JMC_time').val(response.form1.JMC_time);
+        $('#JMC_person').val(response.form1.JMC_person);
+        $('#InputNews').val(response.form1.news);
+        for(var j=0; j<response.image.length; j++){
+            console.log(response.image[j].form1_id);
+            $('.div_image').append('  <img src="' + response.image[j].path + '  " style="width: 200px; height: 100px"/>');                  
           }
-        });
+        }
+      });
     }
 
-    $('#check1').click(function() {
-    $("#checkForm1").toggle(this.checked);
-    });
-    $('#check2').click(function() {
-    $("#checkForm2").toggle(this.checked);
-    });
+  $('#check1').click(function() {
+  $("#checkForm1").toggle(this.checked);
+  });
+  $('#check2').click(function() {
+  $("#checkForm2").toggle(this.checked);
+  });
 
 </script>
 

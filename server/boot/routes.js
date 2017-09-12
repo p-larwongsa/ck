@@ -20,7 +20,6 @@ module.exports = function(app) {
   var rid_agency = app.models.rid_agency;
   var uploads = app.models.Uploads;
   
-
   const CLIENT_ID = "70114818671-0eh6dgjq1fbl1s4j26a3unhukpvi7ars.apps.googleusercontent.com";
   const CLIENT_SECRET = "RX-GqHqsEWRMk1fmLnv-h7iT";
   const REDIRECT_URL = "http://localhost:3000/auth/google/callback";
@@ -537,10 +536,10 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
         console.log(i);
         console.log(form1_id);
         var pack = {
-            name : req.files[i].filename,
-            //path : req.files[i].path,
-            path : "uploads/"+ moment().format('MMMM') + '/' + req.files[i].filename,
-            form1_id : id
+          name : req.files[i].filename,
+          //path : req.files[i].path,
+          path : "uploads/"+ moment().format('MMMM') + '/' + req.files[i].filename,
+          form1_id : id
         }
         console.log(pack);
         uploads.upsert(pack,function(err,callback){

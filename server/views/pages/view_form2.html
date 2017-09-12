@@ -1,10 +1,15 @@
 {%extends "layout/layout.html"%}
 {%block content%}
 
-<h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื่นที่ชลประทาน</h3>  
+<h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื่นที่ชลประทาน</h3> 
+<h4><center>{{office_name}}</center></h4> 
 <hr>
 
 <div class="container">
+  <div  align="right">
+      <button type="button" class="btn btn-info" id="add_form2">เพิ่ม</button>
+  </div>
+  </br>
 <table id="form2table" name="form2table" class="display" cellspacing="0" width="100%">
     <thead>
       <tr>
@@ -36,7 +41,7 @@
   </table>
 </div>
 
- <div class="modal fade" id="edit" role="dialog">
+ <div class="modal fade" id="form2" role="dialog">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content">
@@ -75,7 +80,7 @@
           <div class="form-group">
             <label for="introName">คำนำหน้าชื่อ</label> : 
             <select class="selectpicker" data-live-search="true" id="introName" name="introName">
-              <option value="nameTitle">--- เลือกคำนำหน้าชื่อ ---</option>
+              <option value="" selected>--- เลือกคำนำหน้าชื่อ ---</option>
               <option value="นาย" >นาย</option>
               <option value="นาง" >นาง</option>
               <option value="นางสาว" >นางสาว</option>
@@ -108,7 +113,7 @@
               <input type="checkbox" class="form-check-input" id="Dont" name="Dont">
               ยังไม่ดำเนินการ
             </label>
-              <div class="form-group" id="checkDont">
+              <div class="form-group" id="checkDont" style="display:none">
                 <label for="reason">เพราะ:</label>
                 <textarea class="form-control" rows="5" id="reason" name="reason"></textarea>
               </div>
@@ -123,7 +128,7 @@
               <input type="checkbox" class="form-check-input" id="ChkProcess1" name="ChkProcess1">
               ขั้นตอนที่ 1
             </label>
-              <div class="form-group" id="Process1">
+              <div class="form-group" id="Process1" style="display:none">
                 <textarea class="form-control" rows="5" id="process1" name="process1"></textarea>
               </div>
           </div> <!-- /process 1 -->
@@ -133,7 +138,7 @@
               <input type="checkbox" class="form-check-input" id="ChkProcess2" name="ChkProcess2">
               ขั้นตอนที่ 2
             </label>
-              <div class="form-group" id="Process2">
+              <div class="form-group" id="Process2" style="display:none">
                 <textarea class="form-control" rows="5" id="process2" name="process2"></textarea>
               </div>
           </div> <!-- /process 2 -->
@@ -143,7 +148,7 @@
               <input type="checkbox" class="form-check-input" id="ChkProcess3" name="ChkProcess3">
               ขั้นตอนที่ 3
             </label>
-              <div class="form-group" id="Process3">
+              <div class="form-group" id="Process3" style="display:none">
                 <textarea class="form-control" rows="5" id="process3" name="process3"></textarea>
               </div>
           </div> <!-- /process 3 -->
@@ -152,10 +157,10 @@
             <label class="form-check-label">
               <input type="checkbox" class="form-check-input" id="ChkProcess4" name="ChkProcess4">
               ขั้นตอนที่ 4
-            </label>  
-              <div class="form-group" id="Process4">
+            </label>
+              <div class="form-group" id="Process4" style="display:none">
                 <textarea class="form-control" rows="5" id="process4" name="process4"></textarea>
-              </div>    
+              </div>
           </div> <!-- /process 4 -->
 
           <div class="form-process5">
@@ -163,20 +168,22 @@
               <input type="checkbox" class="form-check-input" id="ChkProcess5" name="ChkProcess5">
               ขั้นตอนที่ 5
             </label>
-              <div class="form-group" id="Process5">
+              <div class="form-group" id="Process5" style="display:none">
                 <textarea class="form-control" rows="5" id="process5" name="process5"></textarea>
               </div>
           </div> <!-- /process 3 -->
 
           </fieldset>
+
           <!-- หมายเหตุ -->
           <fieldset class="form-group">
           <legend>หมายเหตุ</legend>
-            <div class="form-group" >
-              <label for="note">หมายเหตุ:</label>
-              <textarea class="form-control" rows="5" id="note" name="note"></textarea>
-            </div>
+              <div class="form-group" >
+                <label for="note">หมายเหตุ:</label>
+                <textarea class="form-control" rows="5" id="note" name="note"></textarea>
+              </div>
           </fieldset>
+
 
         </div> <!-- //Modal body-->
         <div class="modal-footer">
@@ -247,60 +254,78 @@
       ]
     });
 
-    function deleteForm2(id) {
-      $.ajax({
-            url: '/chkform2',
-            type: 'GET',
-            data: {id : id},
-            dataType: 'json',
-           success: function(response) {
-              console.log(response);   
-              $('#delForm2').modal('show');
-              $('.modal-title').text('ลบรายงาน');
-              $('#Delbody').text('ยืนยันการลบรายงานนี้');
-              $('#Delid').val(response.id);
-              $('#action').val('ลบ');
-            }
-        });
-    }
 
+$('#add_form2').click(function(){
+  $('#form2').modal('show');
+      $('#date2').selectpicker('val', '');
+      $('#id').val('');
+      $('#introName').selectpicker('val', '');
+      $('#firstName').val('');
+      $('#lastName').val('');
+      $('#Do').prop("checked", false);
+      $('#Dont').prop("checked", false);
+      $('#reason').val('');
+      $('#process1').val('');
+      $('#process2').val('');
+      $('#process3').val('');
+      $('#process4').val('');
+      $('#process5').val('');
+      $('#note').val('');
+});
 
-    function edit(id){
-      $.ajax({
+function deleteForm2(id) {
+  $.ajax({
         url: '/chkform2',
         type: 'GET',
         data: {id : id},
         dataType: 'json',
-        success: function(response){
-          console.log(response);
-          $('#edit').modal('show');
-          $('#date2').selectpicker('val', response.date2);
-          $('#id').val(response.id);
-          $('#introName').selectpicker('val', response.introName);
-          $('#firstName').val(response.firstName);
-          $('#lastName').val(response.lastName);
-          if(response.do == 'on'){
-            $('#Do').prop("checked", true);
-          }else{
-            $('#Do').prop("checked", false);
-          }
-          if(response.dont == 'on'){
-            $('#Dont').prop("checked", true);
-          }else{
-            $('#Dont').prop("checked", false);
-          }
-          $('#reason').val(response.reason);
-
-          $('#process1').val(response.process1);
-          $('#process2').val(response.process2);
-          $('#process3').val(response.process3);
-          $('#process4').val(response.process4);
-          $('#process5').val(response.process5);
-          $('#note').val(response.note);
+       success: function(response) {
+          console.log(response);   
+          $('#delForm2').modal('show');
+          $('.modal-title').text('ลบรายงาน');
+          $('#Delbody').text('ยืนยันการลบรายงานนี้');
+          $('#Delid').val(response.id);
+          $('#action').val('ลบ');
         }
-      });
+    });
+}
 
+
+function edit(id){
+  $.ajax({
+    url: '/chkform2',
+    type: 'GET',
+    data: {id : id},
+    dataType: 'json',
+    success: function(response){
+      console.log(response);
+      $('#form2').modal('show');
+      $('#date2').selectpicker('val', response.form2_date);
+      $('#id').val(response.id);
+      $('#introName').selectpicker('val', response.introName);
+      $('#firstName').val(response.firstName);
+      $('#lastName').val(response.lastName);
+      if(response.do == 'on'){
+        $('#Do').prop("checked", true);
+      }else{
+        $('#Do').prop("checked", false);
+      }
+      if(response.dont == 'on'){
+        $('#Dont').prop("checked", true);
+      }else{
+        $('#Dont').prop("checked", false);
+      }
+      $('#reason').val(response.reason);
+
+      $('#process1').val(response.process1);
+      $('#process2').val(response.process2);
+      $('#process3').val(response.process3);
+      $('#process4').val(response.process4);
+      $('#process5').val(response.process5);
+      $('#note').val(response.note);
     }
+  });
+}
 
     $('#Dont').click(function() {
     $("#checkDont").toggle(this.checked);

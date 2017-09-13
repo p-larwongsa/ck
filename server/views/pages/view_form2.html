@@ -257,20 +257,22 @@
 
 $('#add_form2').click(function(){
   $('#form2').modal('show');
-      $('#date2').selectpicker('val', '');
-      $('#id').val('');
-      $('#introName').selectpicker('val', '');
-      $('#firstName').val('');
-      $('#lastName').val('');
-      $('#Do').prop("checked", false);
-      $('#Dont').prop("checked", false);
-      $('#reason').val('');
-      $('#process1').val('');
-      $('#process2').val('');
-      $('#process3').val('');
-      $('#process4').val('');
-      $('#process5').val('');
-      $('#note').val('');
+    $('#date2').selectpicker('val', '');
+    $('#id').val('');
+    $('#InputOfficeName').val('{{user.officeName}}');
+    $('#InputAgencyName').val('{{user.agencyName}}');
+    $('#introName').selectpicker('val', '');
+    $('#firstName').val('');
+    $('#lastName').val('');
+    $('#Do').prop("checked", false);
+    $('#Dont').prop("checked", false);
+    $('#reason').val('');
+    $('#process1').val('');
+    $('#process2').val('');
+    $('#process3').val('');
+    $('#process4').val('');
+    $('#process5').val('');
+    $('#note').val('');
 });
 
 function deleteForm2(id) {

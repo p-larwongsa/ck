@@ -25,7 +25,7 @@ module.exports = function(app) {
   const REDIRECT_URL = "http://localhost:3000/auth/google/callback";
  
  app.get('/', function(req, res) {
-    console.log(req.cookies);
+    //console.log(req.cookies);
     var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
@@ -444,14 +444,19 @@ app.get('/view_report', function(req, res) {
 /* ------------- Form ----------------- */
 
 app.get('/formPage',function(req, res, next) {
-  var user = {};
-  user.email = req.cookies['email'];
-  user.username = req.cookies['username'];
-  user.officeName = req.cookies['office_Name'];
-  user.agencyName = req.cookies['agency_Name'];
-  console.log("formPage Time : "+moment().locale('th').format('LLLL'));
-  var date = moment().locale('th').format('DD MMMM YYYY')
-  res.render('pages/form.html', {user:user, date:date})    
+  console.log(req.cookies);
+  if(req.cookies['email']){
+    var user = {};
+    user.email = req.cookies['email'];
+    user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
+    console.log("formPage Time : "+moment().locale('th').format('LLLL'));
+    var date = moment().locale('th').format('DD MMMM YYYY')
+    res.render('pages/form.html', {user:user, date:date})
+  }else{
+    return res.sendStatus(401);
+  }
 });
 
 app.get('/form',function(req, res, next) {
@@ -588,40 +593,43 @@ app.get('/view_form',function(req, res, next) {
     user.officeName = req.cookies['office_Name'];
     user.agencyName = req.cookies['agency_Name'];
   var view = req.query.view;
-  if(view == 'form1'){
-    console.log('form1');
-    form1.find({
-      include: {
-        relation: 'Uploads'
+  if(req.cookies['access_token']){ 
+    if(view == 'form1'){
+      console.log('form1');
+      form1.find({
+        include: {
+          relation: 'Uploads'
+        }
+      },function(err,data){
+        var lists = data; 
+        //console.log(data);  
+        res.render('pages/view_form1.html', { user: user ,lists: lists});
+      });
+
+    }if(view == 'form2'){
+        console.log('form2');
+        form2.find({},function(err,data){
+          var lists = data;
+          //console.log(lists);
+          res.render('pages/view_form2.html', { user: user ,lists : lists});
+        });
       }
-    },function(err,data){
-      var lists = data; 
-      //console.log(data);  
-      res.render('pages/view_form1.html', { user: user ,lists: lists});
-    });
-
-  }if(view == 'form2'){
-    console.log('form2');
-    form2.find({},function(err,data){
-      var lists = data;
-      //console.log(lists);
-      res.render('pages/view_form2.html', { user: user ,lists : lists});
-    });
-  }
-
-});
-
-app.post('/delete_form1', function(req, res){
-  console.log(req.body);
-  var id = req.body.delId; 
-  form1.destroyById(id,function(err){
-    console.log(err);
-    //var filter = { where: { "form1_id" : id}};
-    uploads.destroyAll({ "form1_id" : req.body.delId}, function(err,info){
-      console.log(info);
-    res.redirect('/view_form?view=form1');
-    });
+    }else{
+      return res.sendStatus(401);
+    }
   });
+
+  app.post('/delete_form1', function(req, res){
+    console.log(req.body);
+    var id = req.body.delId; 
+    form1.destroyById(id,function(err){
+      console.log(err);
+      //var filter = { where: { "form1_id" : id}};
+      uploads.destroyAll({ "form1_id" : req.body.delId}, function(err,info){
+        console.log(info);
+      res.redirect('/view_form?view=form1');
+      });
+    });
 });
 
 app.get('/chkform1', function(req,res) {

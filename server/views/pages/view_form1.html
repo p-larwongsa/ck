@@ -6,10 +6,10 @@
 <hr>
 
 <div class="container">
-<div  align="right">
+<!--<div  align="right">
       <button type="button" class="btn btn-info" id="add_form1">เพิ่ม</button>
   </div>
-  </br>
+  </br>-->
 <table id="form1table" name="form1table" class="display" cellspacing="0" width="100%">
     <thead>
       <tr>
@@ -72,10 +72,10 @@
   <h4>รอบวันที่ :  </h4>  -->
   </fieldset>
   
-  <form action="/sendForm?form=form1" method="post" enctype="multipart/form-data">
+  <form action="/add_form1" method="post" enctype="multipart/form-data">
   <div class="form-group">
-    <label for="date1">รอบวันที่</label> : 
-    <select class="selectpicker" id="date1" name="date1">
+    <label for="reportTime">รอบวันที่</label> : 
+    <select class="selectpicker" id="reportTime" name="reportTime">
       <option value="" selected>--------- รอบวันที่ ---------</option>
       <option value="12 September 2017">12 September 2017</option>
       <option value="19 September 2017">19 September 2017</option>
@@ -260,6 +260,7 @@
 
 <script type="text/javascript">
     var obj = {{ lists | dump | safe}};
+
     $('#form1table').DataTable({
       data: obj,
       "columns": [
@@ -289,11 +290,11 @@
       buttons: [
           'copy', 'csv', 'excel', 'pdf', 'print'
       ]
-      
+
     });
 
 
-$("#add_form1").click(function(){
+/*$("#add_form1").click(function(){
   $('#imgs').empty();
   $('#form1').modal('show');
   $('.modal-title').text('เพิ่มรายงาน');
@@ -309,7 +310,7 @@ $("#add_form1").click(function(){
   $('#JMC_time').val('');
   $('#JMC_person').val('');
   $('#InputNews').val('');
-});
+});*/
 
   function deleteForm1(id) {
     $.ajax({
@@ -344,13 +345,13 @@ $("#add_form1").click(function(){
         $('#imgs').empty();
         $('#form1').modal('show');
         $('.modal-title').text('แก้ไขรายงาน');
-        $('#date1').selectpicker('val',response.form1.form1_date);
+        $('#reportTime').selectpicker('val',response.form1.form1_date);
         $('#id').val(response.form1.id);
         $('#InputOfficeName').val(response.form1.office_name);
         $('#InputAgencyName').val(response.form1.agency_name);
         $('#province').selectpicker('val', response.form1.province);
-        $( '#check1' ).prop( "checked", true );      
-        $( '#check2' ).prop( "checked", true );
+        //$( '#check1' ).prop( "checked", true );      
+        //$( '#check2' ).prop( "checked", true );
         $('#SPK_time').val(response.form1.SPK_time);
         $('#SPK_person').val(response.form1.SPK_person);
         $('#JMC_time').val(response.form1.JMC_time);

@@ -453,7 +453,14 @@ app.get('/formPage',function(req, res, next) {
     user.agencyName = req.cookies['agency_Name'];
     console.log("formPage Time : "+moment().locale('th').format('LLLL'));
     var date = moment().locale('th').format('DD MMMM YYYY')
-    res.render('pages/form.html', {user:user, date:date})
+    rid_office.find({},function(err,callback){
+      var offices = callback;
+      rid_agency.find({},function(err,callback){
+        var agencys = callback;
+        res.render('pages/form.html', {user:user, date:date, offices:offices, agencys:agencys});
+      });  
+    });
+    
   }else{
     return res.sendStatus(401);
   }
@@ -483,8 +490,150 @@ app.get('/form',function(req, res, next) {
         });
     }
 });
+/* ---------edit send form----------- */
+app.post('/add_form1', upload.any(), function(req, res, next){
+  console.log(req.files.length);
+  var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a'); 
+  var user = {};
+    user.email = req.cookies['email'];
+    user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
+  if(req.cookies['access_token']){
+    if(req.files.length == 0){
+      console.log("photo 0 : "+req.files.length);
+      console.log('no photo');
+    var theForm1 = {
+      "id" : req.body.id,
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "province" : req.body.province,
+      "SPK_time" : req.body.SPK_time,
+      "SPK_person" : req.body.SPK_person,
+      "JMC_time" : req.body.JMC_time,
+      "JMC_person" : req.body.JMC_person,
+      "news" : req.body.InputNews,
+      "date" : date,
+      "form1_date" : req.body.reportTime,
+      "user_id" : req.cookies['userId']
+    }
+    form1.upsert(theForm1, function(err, callback){ 
+      form1.find({
+        where:{and: [
+          {"office_name": req.body.InputOfficeName}, 
+          {"agency_name" : req.body.InputAgencyName}
+        ]},
+        include: {
+          relation: 'Uploads'
+        }
+      },function(err,data){
+        var lists = data; 
+        res.render('pages/view_form1.html', {user:user, lists:lists});
+      }); 
+    });
+  } // if files = 0
+  if(req.files.length > 0){
+      console.log("photo > 0 : "+req.files.length);
+      console.log(req.files[0].originalname);
+      var theForm1 = {
+      "id" : req.body.id,
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "province" : req.body.province,
+      "SPK_time" : req.body.SPK_time,
+      "SPK_person" : req.body.SPK_person,
+      "JMC_time" : req.body.JMC_time,
+      "JMC_person" : req.body.JMC_person,
+      "news" : req.body.InputNews,
+      "date" : date,
+      "form1_date" : req.body.date1,
+      "user_id" : req.cookies['userId']
+    };
+    form1.upsert(theForm1, function(err, callback){ 
+      var id = callback.id;
+      console.log(id);
+      var form1_id = id;
+      for(var i = 0; i < req.files.length;i++){
+        console.log(i);
+        console.log(form1_id);
+        var pack = {
+          name : req.files[i].filename,
+          path : "uploads/"+ moment().format('MMMM') + '/' + req.files[i].filename,
+          form1_id : id
+        }
+        console.log(pack);
+        uploads.upsert(pack,function(err,callback){
+          console.log(callback);
+          form1.find({
+            where:{and: [
+              {"office_name": req.body.InputOfficeName}, 
+              {"agency_name" : req.body.InputAgencyName}
+            ]},
+            include: {
+              relation: 'Uploads'
+            }
+          },function(err,data){
+            var lists = data; 
+            res.render('pages/view_form1.html', {user:user, lists:lists});
+          });
+        });   
+      }
+   
+      });
+    }
+  }else{
+    return res.sendStatus(401);
+  } 
+});
 
-app.post('/sendForm', upload.any(), function(req, res, next) {
+app.post('/add_form2', function(req, res, next){
+  console.log(req.body);
+  var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a'); 
+  var user = {};
+    user.email = req.cookies['email'];
+    user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
+  if(req.cookies['access_token']){
+    console.log('form2 was added');
+    var theForm2 = {
+      "id": req.body.id,
+      "form2_date" : req.body.reportTime,
+      "office_name" : req.body.InputOfficeName,
+      "agency_name" : req.body.InputAgencyName,
+      "introName" : req.body.introName,
+      "firstName" : req.body.firstName,
+      "lastName" : req.body.lastName,
+      "do" : req.body.Do,
+      "dont" : req.body.Dont,
+      "reason" : req.body.reason,
+      "process1" : req.body.process1,
+      "process2" : req.body.process2,
+      "process3" : req.body.process3,
+      "process4" : req.body.process4,
+      "process5" : req.body.process5,
+      "note" : req.body.note,
+      "date" : date,
+      "user_id" : req.cookies['userId']
+    };
+    form2.upsert(theForm2, function(err, callback) {
+      form2.find({
+        where:{and: [
+          {"office_name": req.body.InputOfficeName}, 
+          {"agency_name" : req.body.InputAgencyName}
+        ]}
+      },function(err,data){
+        var lists = data; 
+        res.render('pages/view_form2.html', {user:user, lists:lists});
+      });
+    });
+  }else{
+    return res.sendStatus(401);
+  }
+});
+
+/* ---------old----------- */
+/*app.post('/sendForm', upload.any(), function(req, res, next) {
   console.log('form : '+req.query.form);
   var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a');  
   console.log(date);
@@ -584,7 +733,7 @@ app.post('/sendForm', upload.any(), function(req, res, next) {
       res.redirect('/formPage');  
     });
   }
-});
+});*/
 
 app.get('/view_form',function(req, res, next) {
   var user = {};

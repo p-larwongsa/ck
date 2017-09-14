@@ -56,10 +56,10 @@
           <h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื้นที่ชลประทาน</h3>  
           </fieldset>
           <hr>
-          <form action="/sendForm?form=form2" method="post">
+          <form action="/add_form2" method="post">
           <div class="form-group">
-            <label for="date2">รอบวันที่</label> : 
-            <select class="selectpicker" id="date2" name="date2">
+            <label for="reportTime">รอบวันที่</label> : 
+            <select class="selectpicker" id="reportTime" name="reportTime">
               <option value="" selected>--------- รอบวันที่ ---------</option>
               <option value="12 September 2017">12 September 2017</option>
               <option value="19 September 2017">19 September 2017</option>
@@ -257,7 +257,7 @@
 
 $('#add_form2').click(function(){
   $('#form2').modal('show');
-    $('#date2').selectpicker('val', '');
+    $('#reportTime').selectpicker('val', '');
     $('#id').val('');
     $('#InputOfficeName').val('{{user.officeName}}');
     $('#InputAgencyName').val('{{user.agencyName}}');
@@ -302,7 +302,7 @@ function edit(id){
     success: function(response){
       console.log(response);
       $('#form2').modal('show');
-      $('#date2').selectpicker('val', response.form2_date);
+      $('#reportTime').selectpicker('val', response.form2_date);
       $('#id').val(response.id);
       $('#introName').selectpicker('val', response.introName);
       $('#firstName').val(response.firstName);

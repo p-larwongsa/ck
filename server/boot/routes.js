@@ -490,16 +490,74 @@ app.get('/form',function(req, res, next) {
         });
     }
 });
+
 /* ---------edit send form----------- */
+
+app.post('/filter_form1', function(req, res, next){
+  var office = req.body.InputOfficeName;
+  var agency = req.body.InputAgencyName;
+  var user = {};
+    user.email = req.cookies['email'];
+    user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
+    console.log('filter_form1');
+    console.log(req.body);
+    if(req.cookies['access_token']){
+      form1.find({
+        where:{and: [
+          {"office_name": office}, 
+          {"agency_name" : agency}
+        ]},
+        include: {
+          relation: 'Uploads'
+        }
+      },function(err,data){
+        var lists = data; 
+        res.render('pages/view_form1.html', {user:user, lists:lists});
+      }); 
+    }else{
+      return res.sendStatus(401);
+    }
+});
+
+app.post('/filter_form2', function(req, res, next){
+  var user = {};
+    user.email = req.cookies['email'];
+    user.username = req.cookies['username'];
+    user.officeName = req.cookies['office_Name'];
+    user.agencyName = req.cookies['agency_Name'];
+    console.log('filter_form1');
+    console.log(req.body);
+    if(req.cookies['access_token']){
+      var office = req.body.InputOfficeName;
+      var agency = req.body.InputAgencyName;
+      console.log(office);
+      form2.find({
+        where:{and: [
+          {"office_name": office}, 
+          {"agency_name" : agency}
+        ]}
+      },function(err, cb){
+        console.log(cb);
+        var lists = cb;
+        res.render('pages/view_form2.html', {user:user, lists:lists, office:office, agency:agency});
+      });
+    }else{
+      return res.sendStatus(401);
+    }
+});
+
 app.post('/add_form1', upload.any(), function(req, res, next){
   console.log(req.files.length);
-  var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a'); 
+  //var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a'); 
   var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
     user.officeName = req.cookies['office_Name'];
     user.agencyName = req.cookies['agency_Name'];
   if(req.cookies['access_token']){
+    var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a'); 
     if(req.files.length == 0){
       console.log("photo 0 : "+req.files.length);
       console.log('no photo');
@@ -515,7 +573,7 @@ app.post('/add_form1', upload.any(), function(req, res, next){
       "news" : req.body.InputNews,
       "date" : date,
       "form1_date" : req.body.reportTime,
-      "user_id" : req.cookies['userId']
+      "user_edit" : req.cookies['username']
     }
     form1.upsert(theForm1, function(err, callback){ 
       form1.find({
@@ -528,6 +586,7 @@ app.post('/add_form1', upload.any(), function(req, res, next){
         }
       },function(err,data){
         var lists = data; 
+        console.log(data);
         res.render('pages/view_form1.html', {user:user, lists:lists});
       }); 
     });
@@ -547,7 +606,7 @@ app.post('/add_form1', upload.any(), function(req, res, next){
       "news" : req.body.InputNews,
       "date" : date,
       "form1_date" : req.body.date1,
-      "user_id" : req.cookies['userId']
+      "user_edit" : req.cookies['username']
     };
     form1.upsert(theForm1, function(err, callback){ 
       var id = callback.id;
@@ -587,6 +646,8 @@ app.post('/add_form1', upload.any(), function(req, res, next){
 });
 
 app.post('/add_form2', function(req, res, next){
+  var office = req.body.InputOfficeName;
+  var agency = req.body.InputAgencyName;
   console.log(req.body);
   var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a'); 
   var user = {};
@@ -616,7 +677,19 @@ app.post('/add_form2', function(req, res, next){
       "date" : date,
       "user_id" : req.cookies['userId']
     };
-    form2.upsert(theForm2, function(err, callback) {
+    
+      form2.find({
+        where:{and: [
+          {"office_name": office}, 
+          {"agency_name" : agency}
+        ]}
+      },function(err,data){
+        var lists = data; 
+        console.log(lists);
+        //res.render('pages/view_form2.html', {user:user, lists:lists, office:office, agency:agency});
+      });
+
+    /*form2.upsert(theForm2, function(err, callback) {
       form2.find({
         where:{and: [
           {"office_name": req.body.InputOfficeName}, 
@@ -626,114 +699,12 @@ app.post('/add_form2', function(req, res, next){
         var lists = data; 
         res.render('pages/view_form2.html', {user:user, lists:lists});
       });
-    });
+    });*/
+ 
   }else{
     return res.sendStatus(401);
   }
 });
-
-/* ---------old----------- */
-/*app.post('/sendForm', upload.any(), function(req, res, next) {
-  console.log('form : '+req.query.form);
-  var date = moment().local('th').format('DD-MMMM-YYYY, h:mm:ss a');  
-  console.log(date);
-  //var date = moment().locale('th').format('DD MMMM YYYY');  
-  var form = req.query.form;
-  console.log(req.body);
-  if( form == 'form1') {
-    console.log('query : '+req.query);
-    console.log(req.files.length);
-    if(req.files.length == 0){
-      console.log("photo 0 : "+req.files.length);
-      console.log('no photo');
-      var theForm1 = {
-      "id" : req.body.id,
-      "office_name" : req.body.InputOfficeName,
-      "agency_name" : req.body.InputAgencyName,
-      "province" : req.body.province,
-      "SPK_time" : req.body.SPK_time,
-      "SPK_person" : req.body.SPK_person,
-      "JMC_time" : req.body.JMC_time,
-      "JMC_person" : req.body.JMC_person,
-      "news" : req.body.InputNews,
-      "date" : date,
-      "form1_date" : req.body.date1,
-      "user_id" : req.cookies['userId']
-    };
-      form1.upsert(theForm1, function(err, callback) {           
-      res.redirect('/formPage');
-    });
-
-    }if(req.files.length > 0){
-      console.log("photo > 0 : "+req.files.length);
-      console.log(req.files[0].originalname);
-      var theForm1 = {
-      "id" : req.body.id,
-      "office_name" : req.body.InputOfficeName,
-      "agency_name" : req.body.InputAgencyName,
-      "province" : req.body.province,
-      "SPK_time" : req.body.SPK_time,
-      "SPK_person" : req.body.SPK_person,
-      "JMC_time" : req.body.JMC_time,
-      "JMC_person" : req.body.JMC_person,
-      "news" : req.body.InputNews,
-      "date" : date,
-      "form1_date" : req.body.date1,
-      "user_id" : req.cookies['userId']
-    };
-     form1.upsert(theForm1, function(err, callback) {
-      //var date = moment().format();               
-      var id = callback.id;
-      console.log(id);
-      var form1_id = id;
-      for(var i = 0; i < req.files.length;i++){
-        console.log(i);
-        console.log(form1_id);
-        var pack = {
-          name : req.files[i].filename,
-          //path : req.files[i].path,
-          path : "uploads/"+ moment().format('MMMM') + '/' + req.files[i].filename,
-          form1_id : id
-        }
-        console.log(pack);
-        uploads.upsert(pack,function(err,callback){
-          console.log(callback);
-        });
-      
-    }
-    res.redirect('/formPage');
-    });
-  }
-
-  }if( form == 'form2') {
-    console.log(req.body);
-    var theForm2 = {
-      "id": req.body.id,
-      "form2_date" : req.body.date2,
-      "office_name" : req.body.InputOfficeName,
-      "agency_name" : req.body.InputAgencyName,
-      "introName" : req.body.introName,
-      "firstName" : req.body.firstName,
-      "lastName" : req.body.lastName,
-      "do" : req.body.Do,
-      "dont" : req.body.Dont,
-      "reason" : req.body.reason,
-      "process1" : req.body.process1,
-      "process2" : req.body.process2,
-      "process3" : req.body.process3,
-      "process4" : req.body.process4,
-      "process5" : req.body.process5,
-      "note" : req.body.note,
-      "date" : date,
-      "user_id" : req.cookies['userId']
-    };
-    form2.upsert(theForm2, function(err, callback) {
-      //console.log(callback);
-      //var message = "กรอกข้อมูลสำเร็จ";
-      res.redirect('/formPage');  
-    });
-  }
-});*/
 
 app.get('/view_form',function(req, res, next) {
   var user = {};

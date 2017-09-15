@@ -2,17 +2,19 @@
 {%block content%}
 
 <h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื่นที่ชลประทาน</h3> 
-<h4><center>{{office_name}}</center></h4> 
+<p><center>หน่วยงาน : {{office}}</center></p> 
+<p><center>โครงการ : {{agency}}</center></p> 
 <hr>
 
 <div class="container">
-  <div  align="right">
+  <!--<div  align="right">
       <button type="button" class="btn btn-info" id="add_form2">เพิ่ม</button>
   </div>
-  </br>
+  </br>-->
 <table id="form2table" name="form2table" class="display" cellspacing="0" width="100%">
     <thead>
       <tr>
+        <th rowspan="2">รอบรายงาน</th>
         <td colspan="3"><center>รายชื่อเกษตกร</center></td>
         <td colspan="3"><center>ความก้าวหน้า</center></td>
         <td colspan="5"><center>%ความก้าวหน้าของแต่ละขั้นตอน</center></td> 
@@ -59,12 +61,7 @@
           <form action="/add_form2" method="post">
           <div class="form-group">
             <label for="reportTime">รอบวันที่</label> : 
-            <select class="selectpicker" id="reportTime" name="reportTime">
-              <option value="" selected>--------- รอบวันที่ ---------</option>
-              <option value="12 September 2017">12 September 2017</option>
-              <option value="19 September 2017">19 September 2017</option>
-              <option value="26 September 2017">26 September 2017</option>
-            </select>
+            <input type="text" class="form-control" id="reportTime" name="reportTime" readonly />
           </div>
           <div class="form-group">
             <label for="InputOfficeName">สำนักงานชลประทานที่</label> : 
@@ -229,6 +226,7 @@
     $('#form2table').DataTable({
       data: obj,
       "columns": [
+      { data : "form2_date" },
       { data : "introName" },
       { data : "firstName" },
       { data : "lastName" },
@@ -257,7 +255,7 @@
 
 $('#add_form2').click(function(){
   $('#form2').modal('show');
-    $('#reportTime').selectpicker('val', '');
+    $('#reportTime').val('');
     $('#id').val('');
     $('#InputOfficeName').val('{{user.officeName}}');
     $('#InputAgencyName').val('{{user.agencyName}}');
@@ -302,7 +300,7 @@ function edit(id){
     success: function(response){
       console.log(response);
       $('#form2').modal('show');
-      $('#reportTime').selectpicker('val', response.form2_date);
+      $('#reportTime').val(response.form2_date);
       $('#id').val(response.id);
       $('#introName').selectpicker('val', response.introName);
       $('#firstName').val(response.firstName);

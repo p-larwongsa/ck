@@ -5,7 +5,6 @@
 <h4 align="center">โครงการสร้างการรับรู้และเสริมสร้างการเรียนรู้แก่เกษตรกร เพื่อลดความเสี่ยงจากภัยแล้ง</h4>
 <hr>
 
-<div class="container">
 <!--<div  align="right">
       <button type="button" class="btn btn-info" id="add_form1">เพิ่ม</button>
   </div>
@@ -16,6 +15,7 @@
         <th rowspan="3">หน่วยงาน</th>
         <th rowspan="3">โครงการชลประทาน</th>
         <th rowspan="3">จังหวัด</th> 
+        <th rowspan="3">รอบรายงาน</th>
         <th colspan="4"><center>ผลการดำเนินการ</center></th>
       </tr>
       <tr>     
@@ -24,6 +24,8 @@
         <th rowspan="2"><center>ข่าวประชาสัมพันธ์อื่นๆ (ครั้ง)</center></th>
         <th rowspan="2"><center>ภาพถ่ายการลงพื้นที่</center></th>
         <th rowspan="2"><center>แก้ไข/ ลบ</center></th>
+        <th rowspan="2"><center>แก้ไขโดย</center></th>
+        <th rowspan="2"><center>แก้ไขล่าสุด</center></th>
 
       </tr>
       <tr>     
@@ -34,7 +36,6 @@
       </tr>
     </thead>
   </table>
-</div>
 <!--</div>-->
 
 
@@ -75,12 +76,7 @@
   <form action="/add_form1" method="post" enctype="multipart/form-data">
   <div class="form-group">
     <label for="reportTime">รอบวันที่</label> : 
-    <select class="selectpicker" id="reportTime" name="reportTime">
-      <option value="" selected>--------- รอบวันที่ ---------</option>
-      <option value="12 September 2017">12 September 2017</option>
-      <option value="19 September 2017">19 September 2017</option>
-      <option value="26 September 2017">26 September 2017</option>
-    </select>
+    <input type="text" class="form-control" id="reportTime" name="reportTime" readonly />
   </div>
 
   <div class="form-group">
@@ -260,13 +256,14 @@
 
 <script type="text/javascript">
     var obj = {{ lists | dump | safe}};
-
+    console.log(obj);
     $('#form1table').DataTable({
       data: obj,
       "columns": [
       { data : "office_name" },
-      { data : "agency_name" },
+      { data : "agency_name" }, 
       { data : "province" },
+      { data : "form1_date" },
       { data : "SPK_time" },
       { data : "SPK_person" },
       { data : "JMC_time" },
@@ -283,6 +280,11 @@
         return '<div class="input-group"><span class="input-group-btn"><a onClick="edit('+data+')" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a></span><span class="input-group-btn"><a onClick="deleteForm1('+data+')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></span></div>'
 
         }
+      },
+      { data : "user_edit" }, 
+      { data : "date", render : function(date){
+          return moment(date).format("YYYY:MM:DD HH:mm");
+        } 
       }
     ],
       "pagingType": "full_numbers",
@@ -345,7 +347,7 @@
         $('#imgs').empty();
         $('#form1').modal('show');
         $('.modal-title').text('แก้ไขรายงาน');
-        $('#reportTime').selectpicker('val',response.form1.form1_date);
+        $('#reportTime').val(response.form1.form1_date);
         $('#id').val(response.form1.id);
         $('#InputOfficeName').val(response.form1.office_name);
         $('#InputAgencyName').val(response.form1.agency_name);

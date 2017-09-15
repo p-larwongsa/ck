@@ -2,15 +2,13 @@
 {%block content%}
 
 <h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื่นที่ชลประทาน</h3> 
-<p><center>หน่วยงาน : {{office}}</center></p> 
-<p><center>โครงการ : {{agency}}</center></p> 
 <hr>
 
 <div class="container">
-  <!--<div  align="right">
-      <button type="button" class="btn btn-info" id="add_form2">เพิ่ม</button>
+  <div  align="right">
+      <button type="button" class="btn btn-info" id="add">เพิ่ม</button>
   </div>
-  </br>-->
+  </br>
 <table id="form2table" name="form2table" class="display" cellspacing="0" width="100%">
     <thead>
       <tr>
@@ -253,7 +251,7 @@
     });
 
 
-$('#add_form2').click(function(){
+$('#add').click(function(){
   $('#form2').modal('show');
     $('#reportTime').val('');
     $('#id').val('');

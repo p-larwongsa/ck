@@ -522,26 +522,27 @@ app.post('/filter_form1', function(req, res, next){
 });
 
 app.post('/filter_form2', function(req, res, next){
+  var office = req.body.InputOfficeName;
+  var agency = req.body.InputAgencyName;
   var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
     user.officeName = req.cookies['office_Name'];
     user.agencyName = req.cookies['agency_Name'];
-    console.log('filter_form1');
     console.log(req.body);
+    console.log(req.body.InputOfficeName);
+    console.log(req.body.InputAgencyName);
     if(req.cookies['access_token']){
-      var office = req.body.InputOfficeName;
-      var agency = req.body.InputAgencyName;
-      console.log(office);
+      console.log('filter_form2');
       form2.find({
         where:{and: [
-          {"office_name": office}, 
-          {"agency_name" : agency}
+          {"office_name": req.body.InputOfficeName},
+          {"agency_name": req.body.InputAgencyName}
         ]}
-      },function(err, cb){
-        console.log(cb);
-        var lists = cb;
-        res.render('pages/view_form2.html', {user:user, lists:lists, office:office, agency:agency});
+      },function(err, callback){
+        console.log(callback);
+        //var lists = cb;
+        //res.render('pages/view_form2.html', {user:user, lists:lists, office:office, agency:agency});
       });
     }else{
       return res.sendStatus(401);
@@ -675,21 +676,10 @@ app.post('/add_form2', function(req, res, next){
       "process5" : req.body.process5,
       "note" : req.body.note,
       "date" : date,
-      "user_id" : req.cookies['userId']
+      "user_edit" : req.cookies['username']
     };
-    
-      form2.find({
-        where:{and: [
-          {"office_name": office}, 
-          {"agency_name" : agency}
-        ]}
-      },function(err,data){
-        var lists = data; 
-        console.log(lists);
-        //res.render('pages/view_form2.html', {user:user, lists:lists, office:office, agency:agency});
-      });
 
-    /*form2.upsert(theForm2, function(err, callback) {
+    form2.upsert(theForm2, function(err, callback) {
       form2.find({
         where:{and: [
           {"office_name": req.body.InputOfficeName}, 
@@ -699,7 +689,7 @@ app.post('/add_form2', function(req, res, next){
         var lists = data; 
         res.render('pages/view_form2.html', {user:user, lists:lists});
       });
-    });*/
+    });
  
   }else{
     return res.sendStatus(401);

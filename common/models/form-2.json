@@ -51,8 +51,8 @@
     "form2_date": {
       "type": "string"
     },
-    "user_id": {
-      "type": "number"
+    "user_edit": {
+      "type": "string"
     },
     "date": {
       "type": "date"

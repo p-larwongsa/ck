@@ -51,8 +51,8 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">เลืกหน่วยงานและโครงการ</h4>
         </div>
+        <form method="post" action="/filter_form1">  
         <div class="modal-body">  
-          <form method="post" action="/filter_form1">  
           <div class="form-group">
             <label for="InputOfficeName">เลือกหน่วยงาน</label> : 
             <select class="selectpicker" id="InputOfficeName" name="InputOfficeName" data-live-search="true">        
@@ -71,19 +71,18 @@
               {% endfor %}
             </select>
           </div> 
+
         </div>
         <div class="modal-footer">
           <input type="submit" class="btn btn-primary" value="ส่ง" />
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
         </form>  <!-- end form action -->
-      </div>
-      
+        </div>
     </div>
-  </div>
+  </div> <!-- end modalForm1 -->
 
-
-  <!-- Modal Form1-->
+<!-- Modal Form2-->
   <div class="modal fade" id="modalForm2" role="dialog">
     <div class="modal-dialog">  
       <!-- Modal content-->
@@ -92,10 +91,10 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">เลืกหน่วยงานและโครงการ</h4>
         </div>
+        <form method="post" action="/filter_form2">  
         <div class="modal-body">  
-          <form method="post" action="/filter_form2">  
           <div class="form-group">
-            <label for="OfficeName">เลือกหน่วยงาน</label> : 
+            <label for="InputOfficeName">เลือกหน่วยงาน</label> : 
             <select class="selectpicker" id="InputOfficeName" name="InputOfficeName" data-live-search="true">        
               <option value="" selected>--------- เลือกหน่วยงาน ---------</option>
               {% for list in offices%}
@@ -111,18 +110,19 @@
               <option value="{{list.agency_name}}">{{list.agency_name}}</option>
               {% endfor %}
             </select>
-          </div>
-        </div>
+          </div> 
 
+        </div>
         <div class="modal-footer">
           <input type="submit" class="btn btn-primary" value="ส่ง" />
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
         </form>  <!-- end form action -->
-      </div>
-      
+        </div>
     </div>
-  </div>
+  </div> <!-- end modalForm2 -->
+
+  
 
 
 {%endblock%}

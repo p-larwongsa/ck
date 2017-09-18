@@ -1,5 +1,6 @@
 module.exports = function(app) {
   var request = require('request');
+  var fs = require('fs');
   var moment = require('moment');
   var multer  = require('multer');
   var options = multer.diskStorage({
@@ -713,15 +714,31 @@ app.get('/view_form',function(req, res, next) {
   });
 
   app.post('/delete_form1', function(req, res){
+    console.log("delete form1");
     console.log(req.body);
     var id = req.body.delId; 
+
     form1.destroyById(id,function(err){
       console.log(err);
       //var filter = { where: { "form1_id" : id}};
-      uploads.destroyAll({ "form1_id" : req.body.delId}, function(err,info){
-        console.log(info);
-      res.redirect('/view_form?view=form1');
-      });
+      uploads.find({ where:{"form1_id" : req.body.delId}}, function(err,callback){
+        console.log(callback.length);
+        console.log(callback);
+        var imageObj = callback; 
+        for(var i=0; i< imageObj.length; i++){
+          fs.unlink("./"+callback[i].path, (err) => {
+            if (err) {
+                console.log("failed to delete local image:"+err);
+            } else {
+              console.log('successfully deleted local image');  
+            }
+          });
+        }
+        uploads.destroyAll({ "form1_id" : req.body.delId}, function(err,info){
+          console.log(info);
+          res.redirect('/view_form?view=form1');
+        });                                    
+      });  
     });
 });
 

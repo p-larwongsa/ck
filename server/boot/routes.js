@@ -521,32 +521,30 @@ app.post('/filter_form1', function(req, res, next){
     }
 });
 
-app.post('/filter_form2', function(req, res, next){
-  var office = req.body.InputOfficeName;
-  var agency = req.body.InputAgencyName;
+app.post('/filter_form2', function(req,res) {
+  console.log(req.body);
+  console.log("filter form2");
   var user = {};
     user.email = req.cookies['email'];
     user.username = req.cookies['username'];
     user.officeName = req.cookies['office_Name'];
     user.agencyName = req.cookies['agency_Name'];
-    console.log(req.body);
-    console.log(req.body.InputOfficeName);
-    console.log(req.body.InputAgencyName);
-    if(req.cookies['access_token']){
-      console.log('filter_form2');
-      form2.find({
-        where:{and: [
-          {"office_name": req.body.InputOfficeName},
-          {"agency_name": req.body.InputAgencyName}
-        ]}
-      },function(err, callback){
-        console.log(callback);
-        //var lists = cb;
-        //res.render('pages/view_form2.html', {user:user, lists:lists, office:office, agency:agency});
-      });
-    }else{
-      return res.sendStatus(401);
-    }
+  /*form2.find({where:{and:[
+      {"office_name": body.office},
+      {"agency_name": body.agency}
+    ]}},function(err,data){
+    console.log(data);
+    var lists = data;
+    //res.render('pages/view_form2.html', {user:user, lists:lists});
+  });*/
+  console.log(req.body.office);
+  form2.find({where:
+      {"office_name" : "กรมชลประทาน"}
+    },function(err,callback){
+    console.log(callback);
+    var off = callback;
+    //res.render('pages/index.html', );
+  });
 });
 
 app.post('/add_form1', upload.any(), function(req, res, next){

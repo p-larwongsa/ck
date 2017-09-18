@@ -91,11 +91,11 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">เลืกหน่วยงานและโครงการ</h4>
         </div>
-        <form method="post" action="/filter_form2">  
+        <form method="post" action="filter_form2">  
         <div class="modal-body">  
           <div class="form-group">
-            <label for="InputOfficeName">เลือกหน่วยงาน</label> : 
-            <select class="selectpicker" id="InputOfficeName" name="InputOfficeName" data-live-search="true">        
+            <label for="office">เลือกหน่วยงาน</label> : 
+            <select class="selectpicker" id="office" name="office" data-live-search="true">        
               <option value="" selected>--------- เลือกหน่วยงาน ---------</option>
               {% for list in offices%}
               <option value="{{list.office_name}}">{{list.office_name}}</option>
@@ -103,8 +103,8 @@
             </select>
           </div> 
           <div class="form-group">
-            <label for="InputAgencyName">เลือกโครงการ</label> : 
-            <select class="selectpicker" id="InputAgencyName" name="InputAgencyName" data-live-search="true">        
+            <label for="agency">เลือกโครงการ</label> : 
+            <select class="selectpicker" id="agency" name="agency" data-live-search="true">        
               <option value="" selected>--------- เลือกโครงการ ---------</option>
               {% for list in agencys%}
               <option value="{{list.agency_name}}">{{list.agency_name}}</option>
@@ -122,7 +122,6 @@
     </div>
   </div> <!-- end modalForm2 -->
 
-  
 
 
 {%endblock%}

@@ -4,7 +4,7 @@
 <h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื่นที่ชลประทาน</h3> 
 <hr>
 
-<div class="container">
+
   <div  align="right">
       <button type="button" class="btn btn-info" id="add">เพิ่ม</button>
   </div>
@@ -17,6 +17,8 @@
         <td colspan="3"><center>ความก้าวหน้า</center></td>
         <td colspan="5"><center>%ความก้าวหน้าของแต่ละขั้นตอน</center></td> 
         <td rowspan="2"><center>หมายเหตุ</center></td>
+        <td rowspan="2"><center>แก้ไขโดย</center></td>
+        <td rowspan="2"><center>แก้ไขล่าสุด</center></td>
         <td rowspan="2"><center>แก้ไข/ลบ</center></td>
       </tr>
       <tr>
@@ -39,7 +41,7 @@
       </tr>
     </tbody>
   </table>
-</div>
+
 
  <div class="modal fade" id="form2" role="dialog">
     <div class="modal-dialog">
@@ -50,13 +52,13 @@
           <h4 class="modal-title">แก้ไขรายงาน</h4>
         </div>
         <!-- Modal body-->
+        <form action="/add_form2" method="post">
         <div class="modal-body">
 
           <fieldset class="form-group">
           <h3 align="center">รายงานความก้าวหน้าโครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื้นที่ชลประทาน</h3>  
           </fieldset>
           <hr>
-          <form action="/add_form2" method="post">
           <div class="form-group">
             <label for="reportTime">รอบวันที่</label> : 
             <input type="text" class="form-control" id="reportTime" name="reportTime" readonly />
@@ -67,7 +69,7 @@
           </div>
           <div class="form-group">
             <label for="InputAgencyName">โครงการชลประทาน</label> : 
-            <input type="text" class="form-control" id="InputAgencyName" name="InputAgencyName" value="{{user.agencyName}}" readonly />
+            <input type="text" class="form-control" id="InputAgencyName" name="InputAgencyName" value="agencyName" readonly />
           </div>
 
           <fieldset class="form-group">
@@ -237,7 +239,12 @@
       { data : "process4" },
       { data : "process5" },
       { data : "note" },
-      { data : "id" , render : function(data) {
+      { data : "user_edit" }, 
+      { data : "date", render : function(date){
+          return moment(date).format("YYYY:MM:DD HH:mm");
+        } 
+      },
+       { data : "id" , render : function(data) {
         return '<div class="input-group"><span class="input-group-btn"><a onClick="edit('+data+')" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a></span><span class="input-group-btn"><a onClick="deleteForm2('+data+')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></span></div>'
 
         }

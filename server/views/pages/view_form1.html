@@ -23,9 +23,9 @@
         <th colspan="2"><center>JMC</center></th>
         <th rowspan="2"><center>ข่าวประชาสัมพันธ์อื่นๆ (ครั้ง)</center></th>
         <th rowspan="2"><center>ภาพถ่ายการลงพื้นที่</center></th>
-        <th rowspan="2"><center>แก้ไข/ ลบ</center></th>
         <th rowspan="2"><center>แก้ไขโดย</center></th>
         <th rowspan="2"><center>แก้ไขล่าสุด</center></th>
+        <th rowspan="2"><center>แก้ไข/ ลบ</center></th>
 
       </tr>
       <tr>     
@@ -274,17 +274,17 @@
           
         }
       },
+      { data : "user_edit" }, 
+      { data : "date", render : function(date){
+          return moment(date).format("YYYY:MM:DD HH:mm");
+        } 
+      },
       { data : "id" , render : function(data) {
         //return '<div class="input-group"><span class="input-group-btn"><a href="/edit_form1?id='+data+'" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a></span><span class="input-group-btn"><a href="/delete_form1?id='+data+'" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></span></div>'
 
         return '<div class="input-group"><span class="input-group-btn"><a onClick="edit('+data+')" class="btn btn-warning"><span class="glyphicon glyphicon-pencil"></span></a></span><span class="input-group-btn"><a onClick="deleteForm1('+data+')" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span></a></span></div>'
 
         }
-      },
-      { data : "user_edit" }, 
-      { data : "date", render : function(date){
-          return moment(date).format("YYYY:MM:DD HH:mm");
-        } 
       }
     ],
       "pagingType": "full_numbers",

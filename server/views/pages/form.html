@@ -20,16 +20,14 @@
     </tr>
     <tr>
       <td>โครงการสร้างการรับรู้และเสริมสร้างการเรียนรู้แก่เกษตรกร เพื่อลดความเสี่ยงจากภัยแล้ง</td> 
-      <!--<td width="10"><a href="/view_form?view=form1" class="btn btn-success btn-xs" role="button" data-toggle="modal" data-target="#myModal"><span class="glyphicon glyphicon-file" ></span></a></td>-->  
       <td width="10"><a a href="/view_form?view=form1" class="btn btn-info btn-xs" role="button"><span class="glyphicon glyphicon-pencil" ></span></a></td>
-      <td width="10"><a class="btn btn-success btn-xs" role="button" data-toggle="modal" data-target="#modalForm1"><span class="glyphicon glyphicon-file" ></span></a></td>
+      <td width="10"><a class="btn btn-success btn-xs" role="button" id="btn-form1" name="btn-form1"><span class="glyphicon glyphicon-file" ></span></a></td>
 
     </tr>
     <tr>
       <td>โครงการขยายผลการทำนาแบบเปียกสลับแห้งในเขตพื้นที่ชลประทาน</td>  
-      <!--<td width="10"><a href="/view_form?view=form2" class="btn btn-success btn-xs" role="button"><span class="glyphicon glyphicon-file" ></span></a></td>-->
       <td width="10"><a href="/view_form?view=form2" class="btn btn-info btn-xs" role="button"><span class="glyphicon glyphicon-pencil" ></span></a></td>
-      <td width="10"><a class="btn btn-success btn-xs" role="button" data-toggle="modal" data-target="#modalForm2"><span class="glyphicon glyphicon-file" ></span></a></td>
+      <td width="10"><a class="btn btn-success btn-xs" role="button" id="btn-form2" name="btn-form2"><span class="glyphicon glyphicon-file" ></span></a></td>
     </tr>
     <tr>
       <td>Flowto Report</td>  
@@ -43,7 +41,7 @@
 </div> <!-- The first class container -->
 
 <!-- Modal Form1-->
-  <div class="modal fade" id="modalForm1" role="dialog">
+  <div class="modal fade" id="modal-form" role="dialog">
     <div class="modal-dialog">  
       <!-- Modal content-->
       <div class="modal-content">
@@ -51,7 +49,7 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
           <h4 class="modal-title">เลืกหน่วยงานและโครงการ</h4>
         </div>
-        <form method="post" action="/filter_form1">  
+        <form method="post" action="/filter" id="action-form" name="action-form">  
         <div class="modal-body">  
           <div class="form-group">
             <label for="InputOfficeName">เลือกหน่วยงาน</label> : 
@@ -82,46 +80,20 @@
     </div>
   </div> <!-- end modalForm1 -->
 
-<!-- Modal Form2-->
-  <div class="modal fade" id="modalForm2" role="dialog">
-    <div class="modal-dialog">  
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">เลืกหน่วยงานและโครงการ</h4>
-        </div>
-        <form method="post" action="filter_form2">  
-        <div class="modal-body">  
-          <div class="form-group">
-            <label for="office">เลือกหน่วยงาน</label> : 
-            <select class="selectpicker" id="office" name="office" data-live-search="true">        
-              <option value="" selected>--------- เลือกหน่วยงาน ---------</option>
-              {% for list in offices%}
-              <option value="{{list.office_name}}">{{list.office_name}}</option>
-              {% endfor %}
-            </select>
-          </div> 
-          <div class="form-group">
-            <label for="agency">เลือกโครงการ</label> : 
-            <select class="selectpicker" id="agency" name="agency" data-live-search="true">        
-              <option value="" selected>--------- เลือกโครงการ ---------</option>
-              {% for list in agencys%}
-              <option value="{{list.agency_name}}">{{list.agency_name}}</option>
-              {% endfor %}
-            </select>
-          </div> 
-
-        </div>
-        <div class="modal-footer">
-          <input type="submit" class="btn btn-primary" value="ส่ง" />
-          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        </div>
-        </form>  <!-- end form action -->
-        </div>
-    </div>
-  </div> <!-- end modalForm2 -->
 
 
+<script type="text/javascript">
+
+  $('#btn-form1').click(function() {
+    $('#action-form').attr("action", "/filter?form=form1");
+    $('#modal-form').modal('show');
+
+  });
+
+  $('#btn-form2').click(function() {
+    $('#action-form').attr("action", "/filter?form=form2");
+    $('#modal-form').modal('show');
+  });
+</script>
 
 {%endblock%}

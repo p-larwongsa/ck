@@ -493,7 +493,12 @@ app.get('/form',function(req, res, next) {
 
 /* ---------edit send form----------- */
 
-app.post('/filter_form1', function(req, res, next){
+app.post('/filter', function(req, res, next){
+  console.log("body : "+JSON.stringify(req.body));
+  console.log("query : "+JSON.stringify(req.query));
+  var form = req.query.form;
+  console.log(form);
+
   var office = req.body.InputOfficeName;
   var agency = req.body.InputAgencyName;
   var user = {};
@@ -501,9 +506,8 @@ app.post('/filter_form1', function(req, res, next){
     user.username = req.cookies['username'];
     user.officeName = req.cookies['office_Name'];
     user.agencyName = req.cookies['agency_Name'];
-    console.log('filter_form1');
-    console.log(req.body);
-    if(req.cookies['access_token']){
+  if(req.cookies['access_token']){
+    if(form == "form1"){
       form1.find({
         where:{and: [
           {"office_name": office}, 
@@ -516,35 +520,16 @@ app.post('/filter_form1', function(req, res, next){
         var lists = data; 
         res.render('pages/view_form1.html', {user:user, lists:lists});
       }); 
-    }else{
-      return res.sendStatus(401);
     }
-});
-
-app.post('/filter_form2', function(req,res) {
-  console.log(req.body);
-  console.log("filter form2");
-  var user = {};
-    user.email = req.cookies['email'];
-    user.username = req.cookies['username'];
-    user.officeName = req.cookies['office_Name'];
-    user.agencyName = req.cookies['agency_Name'];
-  /*form2.find({where:{and:[
-      {"office_name": body.office},
-      {"agency_name": body.agency}
-    ]}},function(err,data){
-    console.log(data);
-    var lists = data;
-    //res.render('pages/view_form2.html', {user:user, lists:lists});
-  });*/
-  console.log(req.body.office);
-  form2.find({where:
-      {"office_name" : "กรมชลประทาน"}
-    },function(err,callback){
-    console.log(callback);
-    var off = callback;
-    //res.render('pages/index.html', );
-  });
+    if(form == "form2"){
+      form2.find({where:{"office_name":office}},function(err,data){
+        var lists = data; 
+        res.render('pages/view_form2.html', {user:user, lists:lists});
+      }); 
+    }
+  }else{
+    return res.sendStatus(401);
+  }
 });
 
 app.post('/add_form1', upload.any(), function(req, res, next){
